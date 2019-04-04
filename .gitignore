@@ -15,6 +15,7 @@
 /app/tmp/*
 /app/Config/core.php
 /app/Config/database.php
+/app/Config/const.php
 /vendors/*
 
 /vendor/*
