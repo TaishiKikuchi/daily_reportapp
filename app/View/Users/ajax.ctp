@@ -15,5 +15,20 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+echo "test";
+header("HTTP/1.1 200");
+if ('POST' == $_SERVER['REQUEST_METHOD'] && isset($_SERVER['HTTP_X_TRELLO_WEBHOOK'])) {
+    $body = file_get_contents("php://input");
+    if (!empty($body)) {
+        $json = json_decode($body);
+        // ... あとはご自由に ...
 
-require 'webroot' . DIRECTORY_SEPARATOR . 'index.php';
+        var_dump($json);
+    }
+}
+
+
+
+
+
+
