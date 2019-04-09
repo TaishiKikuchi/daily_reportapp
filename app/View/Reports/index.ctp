@@ -14,9 +14,9 @@
         <th>body<th>
         <th>Created</th>
     </tr>
-
     <!-- ここから、$posts配列をループして、投稿記事の情報を表示 -->
-
+    <?php echo $this->Html->link('日報作成',
+array('controller' => 'reports', 'action' => 'add', $auth['id'])); ?>
     <?php foreach ($reports as $report): ?>
     <tr>
         <td><?php echo $report['Report']['id']; ?></td>
@@ -30,14 +30,12 @@ array('controller' => 'reports', 'action' => 'view', $report['Report']['id'])); 
                     'Edit',
                     array('action' => 'edit', $report['Report']['id'])
                 );
-                echo $this->Html->link(
-                    'delete',
-                    array('action' => 'delete', $report['Report']['id'])
+                echo $this->Form->postLink('delete',
+                    array('controller' => 'Reports','action' => 'delete', $report['Report']['id']), array('confirm' => '本当に削除しますか?')
                 );
             ?>
         </td>
         <td><?php echo $report['Report']['body']; ?></td>
-        <td><?php echo $report['Report']['workcontent_id']; ?></td>
         <td><?php echo $report['Report']['created']; ?></td>
     </tr>
     <?php endforeach; ?>
