@@ -30,8 +30,9 @@ array('controller' => 'reports', 'action' => 'view', $report['Report']['id'])); 
                     'Edit',
                     array('action' => 'edit', $report['Report']['id'])
                 );
-                echo $this->Form->postLink('delete',
-                    array('controller' => 'Reports','action' => 'delete', $report['Report']['id']), array('confirm' => '本当に削除しますか?')
+                echo $this->Form->postLink('Delete',
+                array('action' => 'delete', $report['Report']['id']),
+                array('confirm' => '本当に削除しますか?')
                 );
             ?>
         </td>

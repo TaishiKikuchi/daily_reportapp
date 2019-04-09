@@ -30,6 +30,24 @@ class ReportsController extends AppController {
         }
     }
 
+    public function delete($id) {
+        if ($this->request->is('get')) {
+            throw new MethodNotAllowedException();
+        }
+    
+        if ($this->Report->delete($id)) {
+            $this->Session->setFlash(
+                __('The post with id: %s has been deleted.', h($id))
+            );
+        } else {
+            $this->Session->setFlash(
+                __('The post with id: %s could not be deleted.', h($id))
+            );
+        }
+    
+        return $this->redirect(array('action' => 'index'));
+    }
+
     public function edit($id = null) {
         if (!$id) {
             throw new NotFoundException(__('Invalid post'));

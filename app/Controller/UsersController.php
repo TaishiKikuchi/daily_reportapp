@@ -60,7 +60,6 @@ class UsersController extends AppController {
         $this->request->onlyAllow('post');
 
         //$this->request->allowMethod('post');
-
         $this->User->id = $id;
         if (!$this->User->exists()) {
             throw new NotFoundException(__('Invalid user'));
