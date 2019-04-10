@@ -20,6 +20,9 @@ array('controller' => 'reports', 'action' => 'add', $auth['id'])); ?>
     <?php foreach ($reports as $report): ?>
     <tr>
         <td><?php echo $report['Report']['id']; ?></td>
+        <?php foreach ($report['Work'] as $work): ?>
+        <?php echo $work["subject"]; ?>
+        <?php endforeach; ?>
         <td>
             <?php echo $this->Html->link($report['Report']['title'],
 array('controller' => 'reports', 'action' => 'view', $report['Report']['id'])); ?>
