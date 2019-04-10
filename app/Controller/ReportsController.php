@@ -5,6 +5,24 @@ class ReportsController extends AppController {
 
     public function index() {
         $this->set('reports', $this->Report->find('all'));
+        $this->set('shares', $this->Report->Share->find('all'));
+        //$this->set('shares', $this->Share->find('all'));
+        /*
+        $this->set('shares', $this->Share->find('all', 
+            array('order' => 'Share.created ASC',
+                'limit' => 20
+            )
+        ));
+        */
+    }
+
+    public function mypage() {
+        $id = $this->Auth->user('id');
+        $this->set('report', $this->Report->findByUser($id));
+        $this->set('shares', $this->Report->Share->find('all', 
+        array('order' => 'Share.created ASC',
+            'limit' => 20))
+        );
     }
 
     public function view($id = null) {
@@ -30,24 +48,6 @@ class ReportsController extends AppController {
         }
     }
 
-    public function delete($id) {
-        if ($this->request->is('get')) {
-            throw new MethodNotAllowedException();
-        }
-    
-        if ($this->Report->delete($id)) {
-            $this->Session->setFlash(
-                __('The post with id: %s has been deleted.', h($id))
-            );
-        } else {
-            $this->Session->setFlash(
-                __('The post with id: %s could not be deleted.', h($id))
-            );
-        }
-    
-        return $this->redirect(array('action' => 'index'));
-    }
-
     public function edit($id = null) {
         if (!$id) {
             throw new NotFoundException(__('Invalid post'));
@@ -71,6 +71,25 @@ class ReportsController extends AppController {
             $this->request->data = $report;
         }
     }
+
+    public function delete($id) {
+        if ($this->request->is('get')) {
+            throw new MethodNotAllowedException();
+        }
+    
+        if ($this->Report->delete($id)) {
+            $this->Session->setFlash(
+                __('The post with id: %s has been deleted.', h($id))
+            );
+        } else {
+            $this->Session->setFlash(
+                __('The post with id: %s could not be deleted.', h($id))
+            );
+        }
+    
+        return $this->redirect(array('action' => 'index'));
+    }
+
     //操作承認用コード
     //$this->request->data['Report']['user'] = $this->Auth->user('id');
 

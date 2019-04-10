@@ -19,12 +19,12 @@ class Report extends AppModel {
     public $hasMany = array(
         'Work' => array(
             'className' => 'Work',
-            'conditions' => array('Work.report_id' => ''),
+            //'conditions' => array('Work.report_id' => ''),
             'order' => 'Work.starttime ASC'
         ),
         'Share' => array(
             'className' => 'Share',
-            'conditions' => array('Share.report_id' => ''),
+            //'conditions' => array('Share.report_id' => ''),
         )
     );
 }
