@@ -8,8 +8,6 @@ echo $this->Form->input('title', array('default' => $report[0]['Report']['title'
 echo $this->Form->input('user_id', array('type' => 'hidden', 'value' => $report[0]['Report']['user_id']));
 echo $this->Form->input('id', array('type' => 'hidden', 'value' => $report[0]['Report']['id']));
 $wc = 0;
-echo var_dump($report[0]['Report']['user_id']);
-
 
 foreach ($report[0]['Work'] as $work):
     $wc++;

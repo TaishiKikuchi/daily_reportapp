@@ -120,4 +120,19 @@ class ReportsController extends AppController {
     
         return parent::isAuthorized($user);
     }
+
+ 
+    public function create_report($users)
+    {
+        //日報の作成
+        foreach ($users as $user):
+        $data = array('Report' => 
+                    array('user_id' => $user['id'],
+                        'title' => date("m/t") . $user['username'] . '日報'          
+                    )
+        );
+        $this->Report->create();
+        $this->Report->save($data);
+        endforeach;
+    }
 }

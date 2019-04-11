@@ -89,4 +89,11 @@ class UsersController extends AppController {
     public function ajax(){
         
     }
+
+    public function get_users()
+    {
+        //現在のユーザー情報を取得する
+        $users = $this->User->find('all');
+        return $users;
+    }
 }
