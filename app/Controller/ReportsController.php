@@ -6,23 +6,29 @@ class ReportsController extends AppController {
     public function index() {
         $this->set('reports', $this->Report->find('all'));
         $this->set('shares', $this->Report->Share->find('all'));
-        //$this->set('shares', $this->Share->find('all'));
-        /*
-        $this->set('shares', $this->Share->find('all', 
-            array('order' => 'Share.created ASC',
-                'limit' => 20
-            )
-        ));
-        */
     }
 
-    public function mypage() {
-        $id = $this->Auth->user('id');
-        $this->set('report', $this->Report->findByUser($id));
+    public function mypage($id = null) {
+
+        if ($this->request->is('post')) {
+            if ($this->Report->saveAssociated($this->request->data, array('deep' => true))) {
+                $this->Session->setFlash(__('Your post has been saved.'));
+                return $this->redirect(array('action' => 'mypage'));
+            }
+            $this->Session->setFlash(__('Unable to add your post.'));
+        }
+        $user_id = $this->Auth->user('id');
+        $this->set('report', $this->Report->find('all',
+            array('order' => array('Report.created' => 'desc'),
+            'conditions' => array('Report.user_id' => $user_id),
+            'limit' => 1,     
+            )
+        ));
         $this->set('shares', $this->Report->Share->find('all', 
-        array('order' => 'Share.created ASC',
+            array('order' => 'Share.created ASC',
             'limit' => 20))
         );
+        
     }
 
     public function view($id = null) {
@@ -59,7 +65,6 @@ class ReportsController extends AppController {
         }
     
         if ($this->request->is(array('post', 'put'))) {
-            $this->Report->id = $id;
             if ($this->Report->save($this->request->data)) {
                 $this->Session->setFlash(__('Your post has been updated.'));
                 return $this->redirect(array('action' => 'index'));
