@@ -2,7 +2,6 @@
 
 <h2>本日の日報</h2>
 <?php
-echo debug($report);
 echo $this->Form->create('Report');
 echo $this->Form->input('title', array('default' => $report['Report']['title']));
 echo $this->Form->input('user_id', array('type' => 'hidden', 'value' => $report['Report']['user_id']));
@@ -14,7 +13,7 @@ foreach ($report['Work'] as $work):
     echo $this->Form->input('Work.' . $wc . '.id', array('type' => 'hidden','value' => $work['id']));
     echo $this->Form->input('Work.' . $wc . '.subject', 
         array('div' => false, 
-              'default' => $work['subject']
+              'value' => $work['subject']
         )
     ); 
     echo $this->Form->input('Work.' . $wc . '.starttime',
@@ -30,11 +29,11 @@ foreach ($report['Work'] as $work):
             'div' => false,
             'default' => $work['endtime']
         )
-    );
-endforeach; 
-
-echo $this->Html->link('作業内容新規追加', array('controller' => 'reports', 'action' => 'create_work', $report['Report']['id']));
-
+    ); ?>
+    <p><?php echo $this->Html->link('作業内容削除', array('controller' => 'reports', 'action' => 'delete_work', $work['id'])); ?></p>
+<?php endforeach; ?>
+<p><?php echo $this->Html->link('作業内容新規追加', array('controller' => 'reports', 'action' => 'create_work', $report['Report']['id'])); ?></p>
+<?php
 $sc = 0;
 foreach ($report['Share'] as $share):
     echo $this->Form->input('Share.' . $sc . '.id', array('type' => 'hidden','value' => $share['id']));
@@ -42,8 +41,9 @@ foreach ($report['Share'] as $share):
         array('rows' => '3',
               'default' => $share["content"]
             )
-    );
-endforeach;
+    ); ?>
+    <p><?php echo $this->Html->link('気づき・共有削除', array('controller' => 'reports', 'action' => 'delete_share', $share['id'])); ?></p>
+<?php endforeach;
 echo $this->Html->link('気づき・共有新規追加', array('action' => 'create_share', $report['Report']['id']));
 echo $this->Form->end('作成'); ?>
 

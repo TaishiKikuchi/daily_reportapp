@@ -18,12 +18,12 @@ class ReportsController extends AppController {
             $this->Session->setFlash(__('Unable to add your post.'));
         }
         $user_id = $this->Auth->user('id');
-        $tmp = $this->Report->find('all',
+        $report = $this->Report->find('all',
         array('order' => array('Report.created' => 'desc'),
         'conditions' => array('Report.user_id' => $user_id),
         'limit' => 1,     
         ));
-        $this->set('report', $tmp[0]);
+        $this->set('report', $report[0]);
         $this->set('shares', $this->Report->Share->find('all', 
             array('order' => 'Share.created ASC',
             'limit' => 20))
@@ -135,6 +135,40 @@ class ReportsController extends AppController {
         }
         return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
     }
+
+    public function delete_work($id) {
+        if ($this->Report->Work->delete($id)) {
+            $this->Session->setFlash(__('削除できました'));
+        } else {
+            $this->Session->setFlash(__('削除できませんでした'));
+        }
+        return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
+    }
+
+    public function create_share($id) {
+        $data = array('Share' =>
+                    array('report_id' => $id,
+                          'created' => date ("y/m/t/h/i")
+                    )
+        );
+        $this->Report->Share->create();
+        if ($this->Report->Share->save($data)) {
+            $this->Session->setFlash(__(date ("y/m/t/h:i") . '追加できました'));
+        } else {
+            $this->Session->setFlash(__('追加できませんでした'));
+        }
+        return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
+    }
+
+    public function delete_share($id) {
+        if ($this->Report->Share->delete($id)) {
+            $this->Session->setFlash(__('削除できました'));
+        } else {
+            $this->Session->setFlash(__('削除できませんでした'));
+        }
+        return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
+    }
+
     public function create_report($users)
     {
         //日報の作成
