@@ -19,6 +19,8 @@ foreach ($report['Work'] as $work):
     echo $this->Form->input('Work.' . $wc . '.starttime',
         array('type' => 'time',
               'timeFormat' => '24',
+              'interval' => 15,
+              'round' => 'down',
               'div' => false,
               'default' => $work['starttime']
         )
@@ -26,6 +28,7 @@ foreach ($report['Work'] as $work):
     echo $this->Form->input('Work.' . $wc . '.endtime',
         array('type' => 'time',
             'timeFormat' => '24',
+            'interval' => 30,
             'div' => false,
             'default' => $work['endtime']
         )
@@ -36,10 +39,11 @@ foreach ($report['Work'] as $work):
 <?php
 $sc = 0;
 foreach ($report['Share'] as $share):
+    $sc++;
     echo $this->Form->input('Share.' . $sc . '.id', array('type' => 'hidden','value' => $share['id']));
     echo $this->Form->input('Share.' . $sc . '.content',
         array('rows' => '3',
-              'default' => $share["content"]
+              'value' => $share["content"]
             )
     ); ?>
     <p><?php echo $this->Html->link('気づき・共有削除', array('controller' => 'reports', 'action' => 'delete_share', $share['id'])); ?></p>
