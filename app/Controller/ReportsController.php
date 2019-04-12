@@ -4,8 +4,11 @@ class ReportsController extends AppController {
     public $helpers = array('Html', 'Form');
 
     public function index() {
-        $this->set('reports', $this->Report->find('all'));
-        $this->set('shares', $this->Report->Share->find('all'));
+        $this->autoLayout = false;
+        //当日の日報のみを抜き出す処理にしたい
+        $reports = $this->Report->find('all');
+            //array('conditions' => array('Report.created' >= date('Y-m-d', strtotime("-1 day")))));
+        $this->set('reports', $reports);
     }
 
     public function mypage($id = null) {

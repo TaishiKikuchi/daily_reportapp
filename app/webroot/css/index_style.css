@@ -1,0 +1,24 @@
+* {
+    padding: 0;
+    margin: 0;
+    background-color: gray;
+}
+
+
+.report_article {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.report_container {
+    border: solid #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 5px;
+    padding: 5px;
+}
+
+.report_item {
+}
+
