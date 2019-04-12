@@ -18,7 +18,7 @@ class CreateReportShell extends AppShell
     {
         $users = $this->UsersController->get_users();
         if ($users === false) {
-            $message = 'app/Command/CreateReportsShell::create_report | "ユーザー情報"がありません'."\n";
+            $message = 'app/Console/Command/CreateReportsShell::create_report | "ユーザー情報"がありません'."\n";
             $this->log($message);    // ログ書き込み
             return false;
         }

@@ -18,12 +18,12 @@ class ReportsController extends AppController {
             $this->Session->setFlash(__('Unable to add your post.'));
         }
         $user_id = $this->Auth->user('id');
-        $this->set('report', $this->Report->find('all',
-            array('order' => array('Report.created' => 'desc'),
-            'conditions' => array('Report.user_id' => $user_id),
-            'limit' => 1,     
-            )
+        $tmp = $this->Report->find('all',
+        array('order' => array('Report.created' => 'desc'),
+        'conditions' => array('Report.user_id' => $user_id),
+        'limit' => 1,     
         ));
+        $this->set('report', $tmp[0]);
         $this->set('shares', $this->Report->Share->find('all', 
             array('order' => 'Share.created ASC',
             'limit' => 20))
@@ -121,14 +121,28 @@ class ReportsController extends AppController {
         return parent::isAuthorized($user);
     }
 
- 
+    public function create_work($id) {
+        $data = array('Work' =>
+                    array('report_id' => $id,
+                          'created' => date ("y/m/t/h/i")
+                    )
+        );
+        $this->Report->Work->create();
+        if ($this->Report->Work->save($data)) {
+            $this->Session->setFlash(__(date ("y/m/t/h:i") . '追加できました'));
+        } else {
+            $this->Session->setFlash(__('追加できませんでした'));
+        }
+        return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
+    }
     public function create_report($users)
     {
         //日報の作成
         foreach ($users as $user):
         $data = array('Report' => 
-                    array('user_id' => $user['id'],
-                        'title' => date("m/t") . $user['username'] . '日報'          
+                    array('user_id' => $user['User']['id'],
+                        'title' => date("m/t") . $user['User']['username'] . "'日報",
+                        'created' => date ("y/m/t/h/i")    
                     )
         );
         $this->Report->create();
