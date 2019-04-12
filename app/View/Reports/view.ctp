@@ -1,6 +1,5 @@
 <h1>dailyreports</h1>
 <?php echo $this->Html->link('Edit', array('action' => 'edit', $report['Report']['id'])); ?>
-<p><?php echo h($report['Report']['body']); ?></p>
 <table>
     <tr>
         <th>id</th>

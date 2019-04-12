@@ -2,14 +2,14 @@
 
 <h2>本日の日報</h2>
 <?php
-echo var_dump($report);
+echo debug($report);
 echo $this->Form->create('Report');
-echo $this->Form->input('title', array('default' => $report[0]['Report']['title']));
-echo $this->Form->input('user_id', array('type' => 'hidden', 'value' => $report[0]['Report']['user_id']));
-echo $this->Form->input('id', array('type' => 'hidden', 'value' => $report[0]['Report']['id']));
+echo $this->Form->input('title', array('default' => $report['Report']['title']));
+echo $this->Form->input('user_id', array('type' => 'hidden', 'value' => $report['Report']['user_id']));
+echo $this->Form->input('id', array('type' => 'hidden', 'value' => $report['Report']['id']));
 $wc = 0;
 
-foreach ($report[0]['Work'] as $work):
+foreach ($report['Work'] as $work):
     $wc++;
     echo $this->Form->input('Work.' . $wc . '.id', array('type' => 'hidden','value' => $work['id']));
     echo $this->Form->input('Work.' . $wc . '.subject', 
@@ -32,20 +32,20 @@ foreach ($report[0]['Work'] as $work):
         )
     );
 endforeach; 
-?>
-<button>作業内容新規追加</button>
-<?php
+
+echo $this->Html->link('作業内容新規追加', array('controller' => 'reports', 'action' => 'create_work', $report['Report']['id']));
+
 $sc = 0;
-foreach ($report[0]['Share'] as $share):
+foreach ($report['Share'] as $share):
     echo $this->Form->input('Share.' . $sc . '.id', array('type' => 'hidden','value' => $share['id']));
     echo $this->Form->input('Share.' . $sc . '.content',
         array('rows' => '3',
               'default' => $share["content"]
             )
     );
-endforeach; ?>
-<button>気づき新規追加</button>
-<?php echo $this->Form->end('作成'); ?>
+endforeach;
+echo $this->Html->link('気づき・共有新規追加', array('action' => 'create_share', $report['Report']['id']));
+echo $this->Form->end('作成'); ?>
 
 <h2>みんなの共有・気づき</h2>
 <?php foreach ($shares as $share): ?>

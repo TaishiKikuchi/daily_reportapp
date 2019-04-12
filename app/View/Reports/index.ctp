@@ -11,7 +11,6 @@
     <tr>
         <th>Id</th>
         <th>Title</th>
-        <th>body<th>
         <th>Created</th>
     </tr>
     <!-- ここから、$posts配列をループして、投稿記事の情報を表示 -->
@@ -39,7 +38,6 @@ array('controller' => 'reports', 'action' => 'view', $report['Report']['id'])); 
                 );
             ?>
         </td>
-        <td><?php echo $report['Report']['body']; ?></td>
         <td><?php echo $report['Report']['created']; ?></td>
     </tr>
     <?php endforeach; ?>
