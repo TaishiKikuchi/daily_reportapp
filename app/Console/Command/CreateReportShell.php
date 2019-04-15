@@ -22,7 +22,6 @@ class CreateReportShell extends AppShell
             $this->log($message);    // ログ書き込み
             return false;
         }
- 
         $this->ReportsController->create_report($users);
     }
 }
