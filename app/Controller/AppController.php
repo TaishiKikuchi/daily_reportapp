@@ -55,13 +55,13 @@ class AppController extends Controller {
     );
  
     public function isAuthorized($user) {
-        // Admin can access every action
-        if (isset($user['departmentcode']) && $user['departmentcode'] === '3') {
+        // 管理者判別用 今回はまだ作ってないのでログインできてたら全ページアクセス可
+        if (isset($user['departmentcode']) && $user['departmentcode'] != '10') {
             return true;
         }
     
         // デフォルトは拒否
-        return true;
+        return false;
     }
 
     public function beforeFilter() {

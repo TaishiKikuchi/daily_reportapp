@@ -28,6 +28,7 @@
  */
 	Router::connect('/', array('controller' => 'reports', 'action' => 'index'));
 	Router::connect('/mypage', array('controller' => 'reports', 'action' => 'mypage'));
+	//Router::connect('/view', array('controller' => 'reports', 'action' => 'index'));
 /**
  * ...and connect the rest of 'Pages' controller's urls.
  */

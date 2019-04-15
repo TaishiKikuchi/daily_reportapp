@@ -1,6 +1,5 @@
+<?php echo $this->element('header'); ?>
 <h1><?php echo $auth['username'] ?> mypage</h1>
-
-<h2>本日の日報</h2>
 <?php
 echo $this->Form->create('Report');
 echo $this->Form->input('title', array('default' => $report['Report']['title'], 'div' => false));

@@ -6,7 +6,7 @@ class UsersController extends AppController {
 
     public function beforeFilter() {
         parent::beforeFilter();
-        $this->Auth->allow('add', 'logout','ajax', 'edit','mypage');
+        $this->Auth->allow('index', 'logout','add');
     }
 
     public function index() {
@@ -75,7 +75,7 @@ class UsersController extends AppController {
     public function login() {
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
-                $this->redirect($this->Auth->redirect());
+                $this->redirect($this->Auth->redirect(array('controller' => 'reports','action' => 'index')));
             } else {
                 $this->Session->setFlash(__('Invalid username or password, try again'));
             }

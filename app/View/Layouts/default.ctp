@@ -26,6 +26,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<title>
 		<?php echo '日報作成アプリ' ?>
 	</title>
+	<meta name="viewport" content="width=device-width">
 	<?php
 		echo $this->Html->meta('icon');
 		//echo $this->Html->css('cake.generic');
