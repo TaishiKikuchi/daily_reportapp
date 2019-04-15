@@ -1,8 +1,6 @@
-<h1>dailyreports list</h1>
-<p>aaaaaaaaaaaaa</p>
 <?php
-echo $this->Html->css('./index_style.css');
-    echo $this->Html->link('日報作成', array('controller' => 'reports', 'action' => 'add', $auth['id'])); ?>
+    echo $this->element('header');
+    echo $this->Html->css('index_style'); ?>
     <div class="report_article">
     <?php
     foreach ($reports as $report): ?>

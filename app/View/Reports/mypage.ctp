@@ -3,7 +3,7 @@
 <h2>本日の日報</h2>
 <?php
 echo $this->Form->create('Report');
-echo $this->Form->input('title', array('default' => $report['Report']['title']));
+echo $this->Form->input('title', array('default' => $report['Report']['title'], 'div' => false));
 echo $this->Form->input('user_id', array('type' => 'hidden', 'value' => $report['Report']['user_id']));
 echo $this->Form->input('id', array('type' => 'hidden', 'value' => $report['Report']['id']));
 $wc = 0;

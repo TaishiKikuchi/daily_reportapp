@@ -86,12 +86,11 @@ class UsersController extends AppController {
         $this->redirect($this->Auth->logout());
     }
 
-    public function ajax(){
+    public function ajax() {
         
     }
 
-    public function get_users()
-    {
+    public function get_users() {
         //現在のユーザー情報を取得する
         $users = $this->User->find('all');
         return $users;

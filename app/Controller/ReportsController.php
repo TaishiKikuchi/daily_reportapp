@@ -4,10 +4,10 @@ class ReportsController extends AppController {
     public $helpers = array('Html', 'Form');
 
     public function index() {
-        $this->autoLayout = false;
+        //$this->autoLayout = false;
         //当日の日報のみを抜き出す処理にしたい
-        $reports = $this->Report->find('all');
-            //array('conditions' => array('Report.created' >= date('Y-m-d', strtotime("-1 day")))));
+        $reports = $this->Report->find('all',
+            array('conditions' => array('Report.created >=' => date("Y/m/d"))));
         $this->set('reports', $reports);
     }
 
@@ -21,12 +21,14 @@ class ReportsController extends AppController {
             $this->Session->setFlash(__('Unable to add your post.'));
         }
         $user_id = $this->Auth->user('id');
+        //ここの処理はmodel側でやらせるべき？
         $report = $this->Report->find('all',
         array('order' => array('Report.created' => 'desc'),
         'conditions' => array('Report.user_id' => $user_id),
         'limit' => 1,     
         ));
         $this->set('report', $report[0]);
+        //ここはまあそのままでokのようなきがする
         $this->set('shares', $this->Report->Share->find('all', 
             array('order' => 'Share.created ASC',
             'limit' => 20))
@@ -127,12 +129,12 @@ class ReportsController extends AppController {
     public function create_work($id) {
         $data = array('Work' =>
                     array('report_id' => $id,
-                          'created' => date ("y/m/t/h/i")
+                          'created' => date("Y/m/d H:i")
                     )
         );
         $this->Report->Work->create();
         if ($this->Report->Work->save($data)) {
-            $this->Session->setFlash(__(date ("y/m/t/h:i") . '追加できました'));
+            $this->Session->setFlash(__(date("Y/m/d H:i") . '追加できました'));
         } else {
             $this->Session->setFlash(__('追加できませんでした'));
         }
@@ -151,12 +153,12 @@ class ReportsController extends AppController {
     public function create_share($id) {
         $data = array('Share' =>
                     array('report_id' => $id,
-                          'created' => date ("y/m/t/h/i")
+                          'created' => date("Y/m/d H:i")
                     )
         );
         $this->Report->Share->create();
         if ($this->Report->Share->save($data)) {
-            $this->Session->setFlash(__(date ("y/m/t/h:i") . '追加できました'));
+            $this->Session->setFlash(__(date("Y/m/d H:i")   . '追加できました'));
         } else {
             $this->Session->setFlash(__('追加できませんでした'));
         }
@@ -178,8 +180,8 @@ class ReportsController extends AppController {
         foreach ($users as $user):
         $data = array('Report' => 
                     array('user_id' => $user['User']['id'],
-                        'title' => date("m/t") . $user['User']['username'] . "'日報",
-                        'created' => date ("y/m/t/h/i")    
+                        'title' => date("m/d") . $user['User']['username'] . "'日報",
+                        'created' => date("Y/m/d H:i:s")  
                     )
         );
         $this->Report->create();
