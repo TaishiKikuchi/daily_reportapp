@@ -4,6 +4,15 @@ header {
     padding-top: 20px;
 }
 
+#loginstu  {
+    margin-right: 5px;
+    float:right;
+}
+
+header a  {
+    margin-left: 5px;
+}
+
 nav {
     padding: 0;
     background-color: black;

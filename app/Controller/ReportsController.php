@@ -5,10 +5,10 @@ class ReportsController extends AppController {
 
     public function index() {
         //$this->autoLayout = false;
-        //当日の日報のみを抜き出す処理にしたい
         $reports = $this->Report->find('all',
             array('conditions' => array('Report.created >=' => date("Y/m/d"))));
         $this->set('reports', $reports);
+        $this->set('subtitle','日報一覧');
     }
 
     public function mypage($id = null) {
@@ -33,7 +33,7 @@ class ReportsController extends AppController {
             array('order' => 'Share.created ASC',
             'limit' => 20))
         );
-        
+        $this->set('subtitle','マイページ');
     }
 
     public function view($id = null) {
@@ -114,7 +114,7 @@ class ReportsController extends AppController {
         }
         if ($this->action === 'view'){
             return true;
-        }    
+        }
         // 投稿のオーナーは編集や削除ができる
         if (in_array($this->action, array('edit', 'delete'))) {
             $reportId = (int) $this->request->params['pass'][0];
@@ -124,6 +124,11 @@ class ReportsController extends AppController {
         }
     
         return parent::isAuthorized($user);
+    }
+
+    public function beforeFilter() {
+        parent::beforeFilter();
+        $this->Auth->allow('index', 'logout');
     }
 
     public function create_work($id) {
