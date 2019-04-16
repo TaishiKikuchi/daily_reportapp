@@ -1,13 +1,3 @@
-@charset "utf-8";
-* {
-    padding: 0;
-    margin: 0;
-}
-
-body {
-    background-color: #f5f9fa;
-}
-
 .report_article {
     display: flex;
     /* justify-content: center;でもいいかも */
@@ -16,7 +6,7 @@ body {
 }
 
 .report_container {
-    border: solid #fff;
+    border: solid black;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

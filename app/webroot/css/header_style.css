@@ -4,7 +4,7 @@ header {
     padding-top: 20px;
 }
 
-#loginstu  {
+#loginstu {
     margin-right: 5px;
     float:right;
 }
@@ -37,4 +37,12 @@ nav {
 
 .item a:hover {
     color: #fff;
+}
+
+.title {
+    margin-left:20px;
+}
+
+.subtitle {
+    margin-left:40px;
 }
