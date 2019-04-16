@@ -11,8 +11,8 @@
     } ?>
     </div>
     
-    <h1>日報作成app</h1>
-    <h3>~ <?php echo $subtitle ?> ~</h3>
+    <h1 class="title">日報作成app</h1>
+    <h3 class="subtitle">~ <?php echo $subtitle ?> ~</h3>
     <nav>
         <ul class="container">
             <li class="item"><a href="/daily_reportapp/reports/index">日報一覧</a></li>

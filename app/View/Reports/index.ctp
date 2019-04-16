@@ -1,5 +1,6 @@
 <?php
     echo $this->element('header');
+    echo $this->Html->css('style');
     echo $this->Html->css('index_style'); ?>
     <div class="report_article">
     <?php

@@ -28,7 +28,7 @@
 <?php endif; ?>
 <style><!--
 P { text-align:center; font:bold 1.1em sans-serif }
-A { color:#444; text-decoration:none }
+A { color:#ff1; text-decoration:none }
 A:HOVER { text-decoration: underline; color:#44E }
 --></style>
 </head>
