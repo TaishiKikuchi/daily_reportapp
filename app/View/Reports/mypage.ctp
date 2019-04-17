@@ -4,7 +4,7 @@
     echo $this->element('header'); ?>
     <p class="addbutton"><?php echo $this->Html->link('作業内容更新', 
         array('controller' => 'reports', 
-        'action' => 'uplode_work', 
+        'action' => 'load_work', 
         $report['Report']['id']), 
         array('class' => 'button')); ?>
     </p>
