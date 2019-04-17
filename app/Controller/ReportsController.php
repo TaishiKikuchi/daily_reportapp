@@ -1,4 +1,5 @@
 <?php
+App::uses('HttpSocket', 'Network/Http');
 
 class ReportsController extends AppController {
     public $helpers = array('Html', 'Form');
@@ -177,6 +178,25 @@ class ReportsController extends AppController {
             $this->Session->setFlash(__('削除できませんでした'));
         }
         return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
+    }
+
+    public function load_work(/*$user*/) {
+        //まず日報の存在するかどうかをチェック(report_idがあるかどうかで判別)
+        //無かったらcreate_report()で日報作成
+        //$user['User']['task']
+        $url = "https://trello.com/1/boards/5cb569d42044ec48aca76559/cards/";
+        $data = array(
+            'key' => TRELLO_APIKEY,
+            'token' => TRELLO_APITOKEN,
+            'fields' => array('name', 'dateLastActivity')
+        );
+
+
+        $HttpSocket = new HttpSocket();
+        $results = $HttpSocket->get($url, array($data));
+        $response = json_decode($results->body);
+        $this->log($response,LOG_DEBUG);
+        return $this->redirect(array('action' => 'mypage'));
     }
 
     public function create_report($users)
