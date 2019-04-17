@@ -183,21 +183,41 @@ class ReportsController extends AppController {
     public function load_work(/*$user*/) {
         //まず日報の存在するかどうかをチェック(report_idがあるかどうかで判別)
         //無かったらcreate_report()で日報作成
-        //$user['User']['task']
-        $url = "https://trello.com/1/boards/5cb569d42044ec48aca76559/cards/";
+        //$user['User']['task']で
+        
+        /* こっちはboardidから取ってくる版
+        $board_id = '5cb569d42044ec48aca76559';
+        $url = "https://trello.com/1/boards/" . $board_id . "/" . "cards/";
         $data = array(
             'key' => TRELLO_APIKEY,
             'token' => TRELLO_APITOKEN,
-            'fields' => array('name', 'dateLastActivity')
+            'fields' => array('name', 'dateLastActivity'),
+            'since' => 'null' // date("Y-m-d", strtotime('-9 hours'))
+        ); */
+        //こっちはuserのアクションからとってくる
+        $user_id = 'trellousername';
+        $url = "https://trello.com/1/members/" . $user_id . "/" . "actions/";
+        $data = array(
+            'key' => TRELLO_APIKEY,
+            'token' => TRELLO_APITOKEN,
+            'fields' => array('data','date'),
+            'since' => date("Y-m-d", strtotime('-9 hours'))
         );
-
-
+        
+        
         $HttpSocket = new HttpSocket();
         $results = $HttpSocket->get($url, array($data));
-        $response = json_decode($results->body);
-        $this->log($response,LOG_DEBUG);
-        return $this->redirect(array('action' => 'mypage'));
+        $response = json_decode($results->body,true);
+        $ans = array();
+        foreach ($response as $subject) :
+            $ans[] = $subject['data']['card']['name'];
+        endforeach;
+
+        $this->log($ans,LOG_DEBUG);
+        //ここ以降にans配列の重複削除してworksテーブルの更新をする作業を書く
+        return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
     }
+
 
     public function create_report($users)
     {
@@ -206,7 +226,7 @@ class ReportsController extends AppController {
         $data = array('Report' => 
                     array('user_id' => $user['User']['id'],
                         'title' => date("m/d") . $user['User']['username'] . "'日報",
-                        'created' => date("Y/m/d H:i:s")  
+                        'created' => date("Y/m/d H:i")  
                     )
         );
         $this->Report->create();
