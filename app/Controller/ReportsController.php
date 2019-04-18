@@ -6,11 +6,23 @@ class ReportsController extends AppController
 {
     public $helpers = array('Html', 'Form');
 
-    public function index()
+    public function index($code = null)
     {
+        $code = $this->request->data['code'];
+        if ($code == 7 || is_null($code)) {
+            $code = array(
+                7, 1, 2, 3, 4, 5, 6
+            );
+        }
+        $this->log($code, LOG_DEBUG);
         //$this->autoLayout = false;
-        $reports = $this->Report->find('all', array('conditions' => array('Report.created >=' => date("Y/m/d"))));
+        $reports = $this->Report->find('all', array(
+            'conditions' => array(
+                'Report.created >=' => date("Y/m/d"),
+                'User.departmentcode' => $code
+        )));
         $this->set('reports', $reports);
+        $this->set('code', $code);
         $this->set('subtitle', '日報一覧');
     }
 
@@ -210,30 +222,33 @@ class ReportsController extends AppController
             'since' => date("Y-m-d", strtotime('-9 hours'))
         );
         
-        $this->log($url, LOG_DEBUG);
         $HttpSocket = new HttpSocket();
         $response = json_decode($HttpSocket->get($url, array($data))->body, true);
         $subjects = array();
+     
         foreach ($response as $result) :
             $subjects[] = $result['data']['card']['name'];
         endforeach;
 
         //ここ以降にsubject配列の重複削除してworksテーブルの更新をする作業を書く
-        $subjects = array_unique($subjects);
-        $subjects = array_values($subjects);
-        $this->log($subjects, LOG_DEBUG);
-        foreach ($subjects as $subject) :
-            $data = array('Work' =>
-                array('report_id' => $report_id,
-                    'subject' => $subject,
-                    'created' => date("Y/m/d H:i")
-                )
-            );
-            $this->Report->Work->create();
-            $this->Report->Work->save($data);
-        endforeach;
-
-        
+        if (!empty($subjects)) {
+            $this->Report->Work->deleteAll(array('report_id' => $report_id), false);
+            $subjects = array_unique($subjects);
+            $subjects = array_values($subjects);
+            $this->log($subjects, LOG_DEBUG);
+            foreach ($subjects as $subject) :
+                $data = array('Work' =>
+                    array('report_id' => $report_id,
+                        'subject' => $subject,
+                        'created' => date("Y/m/d H:i")
+                    )
+                );
+                $this->Report->Work->create();
+                $this->Report->Work->save($data);
+            endforeach;
+        } else {
+            $this->Session->setFlash(__('作業内容が見つかりませんでした。'));
+        }
         return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
     }
 
