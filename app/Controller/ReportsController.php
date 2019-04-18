@@ -8,11 +8,12 @@ class ReportsController extends AppController
 
     public function index($code = null)
     {
-        $code = $this->request->data['code'];
-        if ($code == 7 || is_null($code)) {
+        if (empty($this->request->data) || $this->request->data['code'] == 7) {
             $code = array(
                 7, 1, 2, 3, 4, 5, 6
             );
+        } else {
+            $code = $this->request->data['code'];
         }
         $this->log($code, LOG_DEBUG);
         //$this->autoLayout = false;
@@ -37,14 +38,23 @@ class ReportsController extends AppController
         }
         $user_id = $this->Auth->user('id');
         //ここの処理はmodel側でやらせるべき？
-        $report = $this->Report->find('all', array('order' => array('Report.created' => 'desc'),
-        'conditions' => array('Report.user_id' => $user_id),
-        'limit' => 1,
+
+        $report = $this->Report->find('all', array(
+            'order' => array('Report.created' => 'desc'),
+            'conditions' => array('Report.user_id' => $user_id),
+            'limit' => 1,
         ));
+
         $this->set('report', $report[0]);
         //ここはまあそのままでokのようなきがする
-        $this->set('shares', $this->Report->Share->find('all', array('order' => 'Share.created ASC',
-            'limit' => 20)));
+        $this->set('shares', $this->Report->Share->find(
+            'all',
+            array(
+                'order' => 'Share.created ASC',
+                'limit' => 20
+            )
+        ));
+
         $this->set('subtitle', 'マイページ');
     }
 
@@ -116,9 +126,6 @@ class ReportsController extends AppController
         return $this->redirect(array('action' => 'index'));
     }
 
-    //操作承認用コード
-    //$this->request->data['Report']['user'] = $this->Auth->user('id');
-
     public function isAuthorized($user)
     {
         // 登録済ユーザーは投稿できる
@@ -152,8 +159,9 @@ class ReportsController extends AppController
     public function create_work($id)
     {
         $data = array('Work' =>
-                    array('report_id' => $id,
-                          'created' => date("Y/m/d H:i")
+                    array(
+                        'report_id' => $id,
+                        'created' => date("Y/m/d H:i")
                     )
         );
         $this->Report->Work->create();
@@ -178,8 +186,9 @@ class ReportsController extends AppController
     public function create_share($id)
     {
         $data = array('Share' =>
-                    array('report_id' => $id,
-                          'created' => date("Y/m/d H:i")
+                    array(
+                        'report_id' => $id,
+                        'created' => date("Y/m/d H:i")
                     )
         );
         $this->Report->Share->create();
@@ -238,7 +247,8 @@ class ReportsController extends AppController
             $this->log($subjects, LOG_DEBUG);
             foreach ($subjects as $subject) :
                 $data = array('Work' =>
-                    array('report_id' => $report_id,
+                    array(
+                        'report_id' => $report_id,
                         'subject' => $subject,
                         'created' => date("Y/m/d H:i")
                     )
@@ -258,7 +268,8 @@ class ReportsController extends AppController
         //日報の作成
         foreach ($users as $user) :
             $data = array('Report' =>
-                    array('user_id' => $user['User']['id'],
+                    array(
+                        'user_id' => $user['User']['id'],
                         'title' => date("m/d") . $user['User']['username'] . "'日報",
                         'created' => date("Y/m/d H:i")
                     ));
