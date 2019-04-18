@@ -2,19 +2,23 @@
 
 App::uses('AppController', 'Controller');
 
-class UsersController extends AppController {
+class UsersController extends AppController
+{
 
-    public function beforeFilter() {
+    public function beforeFilter()
+    {
         parent::beforeFilter();
-        $this->Auth->allow('index', 'logout','add');
+        $this->Auth->allow('index', 'logout', 'add');
     }
 
-    public function index() {
+    public function index()
+    {
         $this->User->recursive = 0;
         $this->set('users', $this->paginate());
     }
 
-    public function view($id = null) {
+    public function view($id = null)
+    {
         $this->User->id = $id;
         if (!$this->User->exists()) {
             throw new NotFoundException(__('Invalid user'));
@@ -22,7 +26,8 @@ class UsersController extends AppController {
         $this->set('user', $this->User->findById($id));
     }
 
-    public function add() {
+    public function add()
+    {
         if ($this->request->is('post')) {
             $this->User->create();
             if ($this->User->save($this->request->data)) {
@@ -35,7 +40,8 @@ class UsersController extends AppController {
         }
     }
 
-    public function edit($id = null) {
+    public function edit($id = null)
+    {
         $this->User->id = $id;
         if (!$this->User->exists()) {
             throw new NotFoundException(__('Invalid user'));
@@ -55,7 +61,8 @@ class UsersController extends AppController {
         }
     }
 
-    public function delete($id = null) {
+    public function delete($id = null)
+    {
         // Prior to 2.5 use
         $this->request->onlyAllow('post');
 
@@ -72,7 +79,8 @@ class UsersController extends AppController {
         return $this->redirect(array('action' => 'index'));
     }
 
-    public function login() {
+    public function login()
+    {
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
                 $this->redirect($this->Auth->redirect(array('controller' => 'reports','action' => 'index')));
@@ -82,21 +90,23 @@ class UsersController extends AppController {
         }
     }
     
-    public function logout() {
+    public function logout()
+    {
         $this->redirect($this->Auth->logout());
     }
 
-    public function ajax() {
-        
+    public function ajax()
+    {
     }
 
-    public function get_users($id=null) {
+    public function getUsers($id = null)
+    {
         $this->User->id = $id;
         if (!$this->User->exists()) {
             throw new NotFoundException(__('Invalid user'));
         }
         //現在のユーザー情報を取得する
-        if (isset($id)){
+        if (isset($id)) {
             //$tmp =  $this->User->find('first', array('conditions' => array('id' => $id))); したと同じ挙動する
             $tmp =  $this->User->findById($id);
             $users = $tmp['User']['task'];
