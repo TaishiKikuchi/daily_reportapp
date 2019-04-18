@@ -1,5 +1,6 @@
 <?php
 App::uses('HttpSocket', 'Network/Http');
+App::import("Controller", "Users");
 
 class ReportsController extends AppController {
     public $helpers = array('Html', 'Form');
@@ -180,22 +181,18 @@ class ReportsController extends AppController {
         return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
     }
 
-    public function load_work(/*$user*/) {
+    public function load_work($user, $report_id) {
         //まず日報の存在するかどうかをチェック(report_idがあるかどうかで判別)
         //無かったらcreate_report()で日報作成
+
+        if (!isset($report_id)) {
+            $report_id = create_report($user);
+        }
+
         //$user['User']['task']で
-        
-        /* こっちはboardidから取ってくる版
-        $board_id = '5cb569d42044ec48aca76559';
-        $url = "https://trello.com/1/boards/" . $board_id . "/" . "cards/";
-        $data = array(
-            'key' => TRELLO_APIKEY,
-            'token' => TRELLO_APITOKEN,
-            'fields' => array('name', 'dateLastActivity'),
-            'since' => 'null' // date("Y-m-d", strtotime('-9 hours'))
-        ); */
-        //こっちはuserのアクションからとってくる
-        $user_id = 'trellousername';
+        // こっちはtrelloのユーザーid取得
+        $UsersController = new UsersController;
+        $user_id =  $UsersController->get_users($user);
         $url = "https://trello.com/1/members/" . $user_id . "/" . "actions/";
         $data = array(
             'key' => TRELLO_APIKEY,
@@ -204,17 +201,30 @@ class ReportsController extends AppController {
             'since' => date("Y-m-d", strtotime('-9 hours'))
         );
         
-        
+        $this->log($url,LOG_DEBUG);
         $HttpSocket = new HttpSocket();
-        $results = $HttpSocket->get($url, array($data));
-        $response = json_decode($results->body,true);
-        $ans = array();
-        foreach ($response as $subject) :
-            $ans[] = $subject['data']['card']['name'];
+        $response = json_decode($HttpSocket->get($url, array($data))->body,true);
+        $subjects = array();
+        foreach ($response as $result) :
+            $subjects[] = $result['data']['card']['name'];
         endforeach;
 
-        $this->log($ans,LOG_DEBUG);
-        //ここ以降にans配列の重複削除してworksテーブルの更新をする作業を書く
+        //ここ以降にsubject配列の重複削除してworksテーブルの更新をする作業を書く
+        $subjects = array_unique($subjects);
+        $subjects = array_values($subjects);
+        $this->log($subjects,LOG_DEBUG);
+        foreach ($subjects as $subject) :
+            $data = array('Work' =>
+                array('report_id' => $report_id,
+                    'subject' => $subject,
+                    'created' => date("Y/m/d H:i")
+                )
+            );
+            $this->Report->Work->create();
+            $this->Report->Work->save($data);
+        endforeach;
+
+        
         return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
     }
 

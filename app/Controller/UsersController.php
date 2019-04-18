@@ -90,9 +90,20 @@ class UsersController extends AppController {
         
     }
 
-    public function get_users() {
+    public function get_users($id=null) {
+        $this->User->id = $id;
+        if (!$this->User->exists()) {
+            throw new NotFoundException(__('Invalid user'));
+        }
         //現在のユーザー情報を取得する
-        $users = $this->User->find('all');
+        if (isset($id)){
+            //$tmp =  $this->User->find('first', array('conditions' => array('id' => $id))); したと同じ挙動する
+            $tmp =  $this->User->findById($id);
+            $users = $tmp['User']['task'];
+        } else {
+            $users = $this->User->find('all');
+        }
+
         return $users;
     }
 }

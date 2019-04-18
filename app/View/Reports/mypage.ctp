@@ -1,10 +1,10 @@
 <?php
-    echo $this->Html->css('style');
     echo $this->Html->css('mypage_style');
     echo $this->element('header'); ?>
     <p class="addbutton"><?php echo $this->Html->link('作業内容更新', 
         array('controller' => 'reports', 
         'action' => 'load_work', 
+        $report['Report']['user_id'],
         $report['Report']['id']), 
         array('class' => 'button')); ?>
     </p>
