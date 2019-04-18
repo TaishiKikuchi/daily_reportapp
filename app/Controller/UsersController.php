@@ -63,7 +63,7 @@ class UsersController extends AppController
 
     public function delete($id = null)
     {
-        // Prior to 2.5 use
+        // cakephp2.4まではこれ
         $this->request->onlyAllow('post');
 
         //$this->request->allowMethod('post');
@@ -93,10 +93,6 @@ class UsersController extends AppController
     public function logout()
     {
         $this->redirect($this->Auth->logout());
-    }
-
-    public function ajax()
-    {
     }
 
     public function getUsers($id = null)
