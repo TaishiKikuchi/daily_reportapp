@@ -14,4 +14,12 @@
     padding: 5px;
 }
 
+.report_container a {
+    color: #000000;
+    text-decoration: none;
+}
 
+.report_container a:hover{
+    color: white;
+    background-color: grey;
+}

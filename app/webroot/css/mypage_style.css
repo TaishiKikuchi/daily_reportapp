@@ -1,16 +1,23 @@
 .textarea{
+    font-size: 18px;
     width: 100%;
     resize: vertical;
 }
 
 .button {
+    font-size: 13px;
     margin: 1px;
-    padding: 1px;
+    margin-bottom: 5px;
     border: solid rgb(27, 12, 12);
     background-color: rgb(48, 187, 145);
     text-decoration: none;
     color: antiquewhite;
     float:block;
+}
+
+input {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .submit input {
@@ -48,6 +55,10 @@
 .addbutton {
     margin-top:10px;
     margin-bottom: 5px;
+}
+
+.timeblock {
+    display:flex;
 }
 
 @media screen and (max-width: 400px) {
