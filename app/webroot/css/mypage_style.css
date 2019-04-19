@@ -15,7 +15,23 @@
     float:block;
 }
 
-input {
+.addbutton {
+    text-align:center;
+    display: block;
+    margin: 0 0 0 auto;
+}
+
+.postbutton {
+    text-align:center;
+    font-size: 18px;
+    width: 100%;
+    background-color: #6da3f3;
+    display: block;
+    margin: auto;
+    cursor:pointer
+}
+
+.input {
     margin-top: 5px;
     margin-bottom: 5px;
 }

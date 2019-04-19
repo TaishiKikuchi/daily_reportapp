@@ -1,7 +1,7 @@
 <?php
     echo $this->Html->css('mypage_style');
     echo $this->element('header'); ?>
-    <p class="addbutton"><?php echo $this->Html->link('作業内容更新', 
+    <p><?php echo $this->Html->link('自動作成', 
         array('controller' => 'reports', 
         'action' => 'load_work', 
         $report['Report']['user_id'],
@@ -31,26 +31,24 @@
         $wc++; ?>
         <div>作業内容: <span> <?php
          echo $this->Html->link('削除', 
-         array(
-            'controller' => 'reports', 
-            'action' => 'delete_work', 
-            $work['id']), 
-         array('class' => 'button')); ?>
+            [
+                'controller' => 'reports', 
+                'action' => 'delete_work', 
+                $work['id']], 
+            ['class' => 'button']); ?>
          </span></div>
     
     <?php
         echo $this->Form->input('Work.' . $wc . '.id', array('type' => 'hidden','value' => $work['id']));
-        echo $this->Form->input('Work.' . $wc . '.subject', 
-            array(
+        echo $this->Form->input('Work.' . $wc . '.subject', [
                 'label' => false,
                 'value' => $work['subject'],
-                'class' => 'textarea')); ?>
+                'class' => 'textarea']); ?>
         
     <div class="timeblock">
         <div>開始時間
     <?php 
-        echo $this->Form->input('Work.' . $wc . '.starttime',
-            array(
+        echo $this->Form->input('Work.' . $wc . '.starttime', [
                 'type' => 'time',
                 'timeFormat' => '24',
                 'interval' => 15,
@@ -58,67 +56,63 @@
                 'div' => false,
                 'label' => false,
                 'default' => $work['starttime']
-            )); ?>
+            ]); ?>
         </div>
 
         <div>終了時間
     <?php 
-        echo $this->Form->input('Work.' . $wc . '.endtime',
-            array(
+        echo $this->Form->input('Work.' . $wc . '.endtime', [
                 'type' => 'time',
                 'timeFormat' => '24',
                 'interval' => 30,
                 'div' => false,
                 'label' => false,
                 'default' => $work['endtime']
-            )); ?>
+        ]); ?>
         </div>
     </div>
     <?php endforeach; ?>
     
-    <p class="addbutton"><?php echo $this->Html->link('作業内容追加', 
-        array(
+    <?php echo $this->Html->link('作業内容追加', [
             'controller' => 'reports', 
             'action' => 'create_work', 
-            $report['Report']['id']), 
-        array('class' => 'button')); ?>
-    </p>
-    <?php
+            $report['Report']['id']
+        ], 
+        ['class' => ['button', 'addbutton']]);
+
     $sc = 0;
     foreach ($report['Share'] as $share):
         $sc++; ?>
-        <div>気づき・共有</div>
+        <div>気づき・共有<span>
+    <?php
+        echo $this->Html->link('削除', [
+            'controller' => 'reports', 
+            'action' => 'delete_share', 
+            $share['id']], 
+            ['class' => 'button']); ?>
+        </span></div>
     <?php
         echo $this->Form->input('Share.' . $sc . '.id', array('type' => 'hidden','value' => $share['id']));
-        echo $this->Form->input('Share.' . $sc . '.content',
-            array(
+        echo $this->Form->input('Share.' . $sc . '.content', [
                 'rows' => '3',
                 'label' => false,
                 'value' => $share["content"],
-                'class' => 'textarea'));
-
-        echo $this->Html->link('削除', 
-            array(
-                'controller' => 'reports', 
-                'action' => 'delete_share', 
-                $share['id']), 
-                array('class' => 'button'));
+                'class' => 'textarea']);        
     endforeach; ?>
+   
     
-    <p class="addbutton">
     <?php
-        echo $this->Html->link('気づき・共有追加', 
-            array(
+        echo $this->Html->link('気づき・共有追加', [
                 'action' => 'create_share', 
-                $report['Report']['id']), 
-            array('class' => 'button'));
+                $report['Report']['id']
+            ], 
+            ['class' => ['button', 'addbutton']]);
 
-        echo $this->Form->button('作成', array(
+        echo $this->Form->button('作成', [
                 'type' => 'submit',
                 'escape' => true,
-                'class' => 'button'));
+                'class' => ['button', 'postbutton']]);
         echo $this->Form->end(); ?>
-    </p>
     </div>
     <div class="show_share">
     <h2>みんなの共有・気づき</h2>

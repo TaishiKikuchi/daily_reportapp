@@ -102,7 +102,7 @@ class ReportsController extends AppController
         if ($this->request->is(['post', 'put'])) {
             if ($this->Report->save($this->request->data)) {
                 $this->Session->setFlash(__('Your post has been updated.'));
-                return $this->redirect(array('action' => 'index'));
+                return $this->redirect(['action' => 'index']);
             }
             $this->Session->setFlash(__('Unable to update your post.'));
         }
@@ -244,7 +244,7 @@ class ReportsController extends AppController
 
         //ここ以降にsubject配列の重複削除してworksテーブルの更新をする作業を書く
         if (!empty($subjects)) {
-            $this->Report->Work->deleteAll(array('report_id' => $report_id), false);
+            $this->Report->Work->deleteAll(['report_id' => $report_id], false);
             $subjects = array_unique($subjects);
             $subjects = array_values($subjects);
             $this->log($subjects, LOG_DEBUG);
