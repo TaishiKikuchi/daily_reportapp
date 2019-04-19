@@ -49,7 +49,7 @@ class UsersController extends AppController
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('The user has been saved'));
-                return $this->redirect(array('action' => 'index'));
+                return $this->redirect(['action' => 'index']);
             }
             $this->Session->setFlash(
                 __('The user could not be saved. Please, try again.')
@@ -73,17 +73,17 @@ class UsersController extends AppController
         }
         if ($this->User->delete()) {
             $this->Session->setFlash(__('User deleted'));
-            return $this->redirect(array('action' => 'index'));
+            return $this->redirect(['action' => 'index']);
         }
         $this->Session->setFlash(__('User was not deleted'));
-        return $this->redirect(array('action' => 'index'));
+        return $this->redirect(['action' => 'index']);
     }
 
     public function login()
     {
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
-                $this->redirect($this->Auth->redirect(array('controller' => 'reports','action' => 'index')));
+                $this->redirect($this->Auth->redirect(['controller' => 'reports','action' => 'index']));
             } else {
                 $this->Session->setFlash(__('Invalid username or password, try again'));
             }
@@ -97,12 +97,12 @@ class UsersController extends AppController
 
     public function getUsers($id = null)
     {
-        $this->User->id = $id;
-        if (!$this->User->exists()) {
-            throw new NotFoundException(__('Invalid user'));
-        }
         //現在のユーザー情報を取得する
         if (isset($id)) {
+            $this->User->id = $id;
+            if (!$this->User->exists()) {
+                throw new NotFoundException(__('Invalid user'));
+            }
             //$tmp =  $this->User->find('first', array('conditions' => array('id' => $id))); したと同じ挙動する
             $tmp =  $this->User->findById($id);
             $users = $tmp['User']['task'];

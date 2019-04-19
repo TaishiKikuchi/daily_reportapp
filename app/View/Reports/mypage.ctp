@@ -45,7 +45,9 @@
                 'label' => false,
                 'value' => $work['subject'],
                 'class' => 'textarea')); ?>
-        <div>開始時間</div>
+        
+    <div class="timeblock">
+        <div>開始時間
     <?php 
         echo $this->Form->input('Work.' . $wc . '.starttime',
             array(
@@ -57,8 +59,9 @@
                 'label' => false,
                 'default' => $work['starttime']
             )); ?>
+        </div>
 
-        <div>終了時間</div>
+        <div>終了時間
     <?php 
         echo $this->Form->input('Work.' . $wc . '.endtime',
             array(
@@ -68,9 +71,11 @@
                 'div' => false,
                 'label' => false,
                 'default' => $work['endtime']
-            ));
+            )); ?>
+        </div>
+    </div>
+    <?php endforeach; ?>
     
-    endforeach; ?>
     <p class="addbutton"><?php echo $this->Html->link('作業内容追加', 
         array(
             'controller' => 'reports', 

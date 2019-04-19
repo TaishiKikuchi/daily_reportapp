@@ -22,7 +22,7 @@
     <?php
     foreach ($reports as $report): ?>
     <div class="report_container"><?php
-        echo $report['Report']['title'];
+        echo $this->Html->link($report['Report']['title'], array('action' => 'view', $report['Report']['id']));
         foreach ($report['Work'] as $work): ?>
         <div class="report_item"><?php echo $work['subject']; ?></div>
         <div><?php echo $work['starttime']; ?></div>

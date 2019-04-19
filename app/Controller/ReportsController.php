@@ -4,56 +4,61 @@ App::import("Controller", "Users");
 
 class ReportsController extends AppController
 {
-    public $helpers = array('Html', 'Form');
+    public $helpers = ['Html', 'Form'];
 
     public function index($code = null)
     {
         if (empty($this->request->data) || $this->request->data['code'] == 7) {
-            $code = array(
+            $code = [
                 7, 1, 2, 3, 4, 5, 6
-            );
+            ];
         } else {
             $code = $this->request->data['code'];
         }
         $this->log($code, LOG_DEBUG);
         //$this->autoLayout = false;
-        $reports = $this->Report->find('all', array(
-            'conditions' => array(
+        $reports = $this->Report->find('all', [
+            'conditions' => [
                 'Report.created >=' => date("Y/m/d"),
                 'User.departmentcode' => $code
-        )));
+            ]
+        ]);
+
         $this->set('reports', $reports);
         $this->set('code', $code);
         $this->set('subtitle', '日報一覧');
     }
 
+    
+    public function shareindex()
+    {
+        
+    }
+
     public function mypage($id = null)
     {
         if ($this->request->is('post')) {
-            if ($this->Report->saveAssociated($this->request->data, array('deep' => true))) {
+            if ($this->Report->saveAssociated($this->request->data, ['deep' => true])) {
                 $this->Session->setFlash(__('Your post has been saved.'));
-                return $this->redirect(array('action' => 'mypage'));
+                return $this->redirect(['action' => 'mypage']);
             }
             $this->Session->setFlash(__('Unable to add your post.'));
         }
         $user_id = $this->Auth->user('id');
         //ここの処理はmodel側でやらせるべき？
 
-        $report = $this->Report->find('all', array(
-            'order' => array('Report.created' => 'desc'),
-            'conditions' => array('Report.user_id' => $user_id),
-            'limit' => 1,
-        ));
+        $report = $this->Report->find('all', [
+            'order' => ['Report.created' => 'desc'],
+            'conditions' => ['Report.user_id' => $user_id],
+            'limit' => 1
+        ]);
 
         $this->set('report', $report[0]);
         //ここはまあそのままでokのようなきがする
-        $this->set('shares', $this->Report->Share->find(
-            'all',
-            array(
+        $this->set('shares', $this->Report->Share->find('all', [
                 'order' => 'Share.created ASC',
                 'limit' => 20
-            )
-        ));
+        ]));
 
         $this->set('subtitle', 'マイページ');
     }
@@ -77,7 +82,7 @@ class ReportsController extends AppController
             $this->Report->create();
             if ($this->Report->save($this->request->data)) {
                 $this->Session->setFlash(__('Your post has been saved.'));
-                return $this->redirect(array('action' => 'index'));
+                return $this->redirect(['action' => 'index']);
             }
             $this->Session->setFlash(__('Unable to add your post.'));
         }
@@ -94,7 +99,7 @@ class ReportsController extends AppController
             throw new NotFoundException(__('Invalid post'));
         }
     
-        if ($this->request->is(array('post', 'put'))) {
+        if ($this->request->is(['post', 'put'])) {
             if ($this->Report->save($this->request->data)) {
                 $this->Session->setFlash(__('Your post has been updated.'));
                 return $this->redirect(array('action' => 'index'));
@@ -123,7 +128,7 @@ class ReportsController extends AppController
             );
         }
     
-        return $this->redirect(array('action' => 'index'));
+        return $this->redirect(['action' => 'index']);
     }
 
     public function isAuthorized($user)
@@ -140,7 +145,7 @@ class ReportsController extends AppController
             return true;
         }
         // 投稿のオーナーは編集や削除ができる
-        if (in_array($this->action, array('edit', 'delete'))) {
+        if (in_array($this->action, ['edit', 'delete'])) {
             $reportId = (int) $this->request->params['pass'][0];
             if ($this->Report->isOwnedBy($reportId, $user['id'])) {
                 return true;
@@ -158,19 +163,18 @@ class ReportsController extends AppController
 
     public function create_work($id)
     {
-        $data = array('Work' =>
-                    array(
+        $data = ['Work' => [
                         'report_id' => $id,
                         'created' => date("Y/m/d H:i")
-                    )
-        );
+        ]];
+
         $this->Report->Work->create();
         if ($this->Report->Work->save($data)) {
             $this->Session->setFlash(__(date("Y/m/d H:i") . '追加できました'));
         } else {
             $this->Session->setFlash(__('追加できませんでした'));
         }
-        return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
+        return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
     }
 
     public function delete_work($id)
@@ -180,24 +184,23 @@ class ReportsController extends AppController
         } else {
             $this->Session->setFlash(__('削除できませんでした'));
         }
-        return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
+        return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
     }
 
     public function create_share($id)
     {
-        $data = array('Share' =>
-                    array(
+        $data = ['Share' => [
                         'report_id' => $id,
                         'created' => date("Y/m/d H:i")
-                    )
-        );
+        ]];
+
         $this->Report->Share->create();
         if ($this->Report->Share->save($data)) {
             $this->Session->setFlash(__(date("Y/m/d H:i")   . '追加できました'));
         } else {
             $this->Session->setFlash(__('追加できませんでした'));
         }
-        return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
+        return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
     }
 
     public function delete_share($id)
@@ -207,7 +210,7 @@ class ReportsController extends AppController
         } else {
             $this->Session->setFlash(__('削除できませんでした'));
         }
-        return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
+        return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
     }
 
     public function load_work($user, $report_id)
@@ -224,12 +227,12 @@ class ReportsController extends AppController
         $UsersController = new UsersController;
         $user_id =  $UsersController->getUsers($user);
         $url = "https://trello.com/1/members/" . $user_id . "/" . "actions/";
-        $data = array(
+        $data = [
             'key' => TRELLO_APIKEY,
             'token' => TRELLO_APITOKEN,
-            'fields' => array('data','date'),
+            'fields' => ['data','date'],
             'since' => date("Y-m-d", strtotime('-9 hours'))
-        );
+        ];
         
         $HttpSocket = new HttpSocket();
         $response = json_decode($HttpSocket->get($url, array($data))->body, true);
@@ -246,13 +249,12 @@ class ReportsController extends AppController
             $subjects = array_values($subjects);
             $this->log($subjects, LOG_DEBUG);
             foreach ($subjects as $subject) :
-                $data = array('Work' =>
-                    array(
+                $data = ['Work' => [
                         'report_id' => $report_id,
                         'subject' => $subject,
                         'created' => date("Y/m/d H:i")
-                    )
-                );
+                ]];
+
                 $this->Report->Work->create();
                 $this->Report->Work->save($data);
             endforeach;
@@ -267,12 +269,12 @@ class ReportsController extends AppController
     {
         //日報の作成
         foreach ($users as $user) :
-            $data = array('Report' =>
-                    array(
+            $data = ['Report' => [
                         'user_id' => $user['User']['id'],
                         'title' => date("m/d") . $user['User']['username'] . "'日報",
                         'created' => date("Y/m/d H:i")
-                    ));
+            ]];
+
             $this->Report->create();
             $this->Report->save($data);
         endforeach;
