@@ -5,6 +5,11 @@ App::import("Controller", "Users");
 class ReportsController extends AppController
 {
     public $helpers = ['Html', 'Form'];
+    public $components = array('Paginator');
+
+    public $paginate = [
+        'limit' => 5
+    ];
 
     public function index($code = null)
     {
@@ -32,7 +37,9 @@ class ReportsController extends AppController
     
     public function shareindex()
     {
-        
+        $this->Paginator->settings = $this->paginate;
+        $data = $this->Paginator->paginate('Share');
+        $this->set('shares', $data);
     }
 
     public function mypage($id = null)
