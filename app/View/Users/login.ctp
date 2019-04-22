@@ -1,5 +1,7 @@
 <div class="users form">
-<?php echo $this->session->flash('auth'); ?>
+<?php
+echo $this->Html->css('cake.generic');  
+echo $this->session->flash('auth'); ?>
 <?php echo $this->Form->create('User'); ?>
     <fieldset>
         <legend>
