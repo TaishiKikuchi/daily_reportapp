@@ -1,4 +1,5 @@
 <?php
+echo $this->Html->css('cake.generic'); 
  if ($auth) {
  echo 'ログインユーザ' . $auth['username'];
  }

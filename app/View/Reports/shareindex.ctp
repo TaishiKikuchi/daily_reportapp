@@ -1,13 +1,28 @@
-<div class="report_article">
+<?php
+echo $this->element('header');
+echo $this->Html->css('shareindex_style'); ?>
+
+<table>
+    <tr>
+        <th>カテゴリId</th>
+        <th>気づき・共有</th>
+    </tr>
+
     <?php
-    debug($shares);
     foreach ($shares as $share): ?>
-    <div class="report_container"><?php
-        echo $share['Share']['content']; ?>
-    </div>
+    <tr>
+        <td>
+            <?php
+            echo $share['Share']['category_id']; ?>
+        </td>
+        <td>        
+            <?php 
+            echo $share['Share']['content']; ?>
+        </td>
+    </tr>
     <?php
-    endforeach;
-    echo $this->Paginator->numbers();
-    ?>
-    </div>
-    <?php unset($share); ?>
+    endforeach; ?>
+</table>
+<div class='pager'>
+<?php echo $this->Paginator->numbers(); ?>
+</div>

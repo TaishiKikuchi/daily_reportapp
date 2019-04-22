@@ -37,9 +37,20 @@ class ReportsController extends AppController
     
     public function shareindex()
     {
-        $this->Paginator->settings = $this->paginate;
+        $this->Paginator->settings = $this->paginate = [
+            'conditions' => [
+                'NOT' => [
+                    'content' => null
+                ]
+            ],
+            'limit' => 5,
+            'order' => ['Share.created' => 'desc']
+        ];
+
         $data = $this->Paginator->paginate('Share');
         $this->set('shares', $data);
+
+        $this->set('subtitle', '共有一覧');
     }
 
     public function mypage($id = null)
@@ -81,6 +92,7 @@ class ReportsController extends AppController
             throw new NotFoundException(__('Invalid post'));
         }
         $this->set('report', $report);
+        $this->set('subtitle', '日報詳細');
     }
 
     public function add()

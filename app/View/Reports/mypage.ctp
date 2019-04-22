@@ -1,7 +1,7 @@
 <?php
     echo $this->Html->css('mypage_style');
     echo $this->element('header'); ?>
-    <p><?php echo $this->Html->link('自動作成', 
+    <p><?php echo $this->Html->link('作業内容読み込み', 
         array('controller' => 'reports', 
         'action' => 'load_work', 
         $report['Report']['user_id'],

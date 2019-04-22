@@ -12,6 +12,7 @@
     align-items: flex-start;
     margin: 5px;
     padding: 5px;
+    background-color: #b0c4de;
 }
 
 .report_container a {
@@ -19,7 +20,7 @@
     text-decoration: none;
 }
 
-.report_container a:hover{
-    color: white;
-    background-color: grey;
+.report_container:hover{
+    color: black;
+    background-color: #3d7e9a;
 }

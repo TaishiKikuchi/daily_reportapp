@@ -8,7 +8,7 @@ class UsersController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Auth->allow('index', 'logout', 'add');
+        $this->Auth->allow('logout', 'add');
     }
 
     public function index()
@@ -109,7 +109,7 @@ class UsersController extends AppController
         } else {
             $users = $this->User->find('all');
         }
-
+        
         return $users;
     }
 }
