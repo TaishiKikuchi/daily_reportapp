@@ -8,22 +8,24 @@
         $report['Report']['id']), 
         array('class' => 'button')); ?>
     </p>
+    <button id="add_work" type="button">フォーム動的出力</button>
+
 <div class="container"> 
     <div class="report_form">
 <?php
     echo $this->Form->create('Report');
-    echo $this->Form->input('title', array(
+    echo $this->Form->input('title', [
         'default' => $report['Report']['title'], 
         'div' => false
-    ));
-    echo $this->Form->input('user_id', array(
+    ]);
+    echo $this->Form->input('user_id', [
         'type' => 'hidden', 
         'value' => $report['Report']['user_id']
-    ));
-    echo $this->Form->input('id', array(
+    ]);
+    echo $this->Form->input('id', [
         'type' => 'hidden', 
         'value' => $report['Report']['id']
-    ));
+    ]);
     
     $wc = 0;
 
@@ -39,7 +41,7 @@
          </span></div>
     
     <?php
-        echo $this->Form->input('Work.' . $wc . '.id', array('type' => 'hidden','value' => $work['id']));
+        echo $this->Form->input('Work.' . $wc . '.id', ['type' => 'hidden','value' => $work['id']]);
         echo $this->Form->input('Work.' . $wc . '.subject', [
                 'label' => false,
                 'value' => $work['subject'],
@@ -72,6 +74,7 @@
         </div>
     </div>
     <?php endforeach; ?>
+    <div id="work"></div>
     
     <?php echo $this->Html->link('作業内容追加', [
             'controller' => 'reports', 
@@ -118,6 +121,8 @@
     <h2>みんなの共有・気づき</h2>
     <?php foreach ($shares as $share): ?>
                 <p><?php echo $share['Share']['content']; ?></p>
-    <?php endforeach; ?> 
+    <?php endforeach; 
+    echo $this->Html->script('script');
+    ?>
     </div>
 </div>
