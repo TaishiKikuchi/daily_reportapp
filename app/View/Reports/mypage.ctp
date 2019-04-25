@@ -8,7 +8,7 @@
         $report['Report']['id']), 
         array('class' => 'button')); ?>
     </p>
-    <button id="add_work" type="button">フォーム動的出力</button>
+    <button id="add_work" class="addbutton" type="button">フォーム動的出力</button>
 
 <div class="container"> 
     <div class="report_form">
@@ -74,7 +74,7 @@
         </div>
     </div>
     <?php endforeach; ?>
-    <div id="work"></div>
+    <div id="work" value="<?php echo $wc+ 1 ?>"></div>
     
     <?php echo $this->Html->link('作業内容追加', [
             'controller' => 'reports', 
