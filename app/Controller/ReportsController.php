@@ -56,6 +56,7 @@ class ReportsController extends AppController
     public function mypage($id = null)
     {
         if ($this->request->is('post')) {
+            $this->log($this->request->data, LOG_DEBUG);
             if ($this->Report->saveAssociated($this->request->data, ['deep' => true])) {
                 $this->Session->setFlash(__('Your post has been saved.'));
                 return $this->redirect(['action' => 'mypage']);
