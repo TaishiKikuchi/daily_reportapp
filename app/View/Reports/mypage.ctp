@@ -8,7 +8,6 @@
         $report['Report']['id']), 
         array('class' => 'button')); ?>
     </p>
-    <button id="add_work" class="addbutton" type="button">フォーム動的出力</button>
 
 <div class="container"> 
     <div class="report_form">
@@ -58,7 +57,7 @@
                 'div' => false,
                 'label' => false,
                 'default' => $work['starttime']
-            ]); ?>
+        ]); ?>
         </div>
 
         <div>終了時間
@@ -74,15 +73,9 @@
         </div>
     </div>
     <?php endforeach; ?>
-    <div id="work" value="<?php echo $wc+ 1 ?>"></div>
-    
-    <?php echo $this->Html->link('作業内容追加', [
-            'controller' => 'reports', 
-            'action' => 'create_work', 
-            $report['Report']['id']
-        ], 
-        ['class' => ['button', 'addbutton']]);
-
+    <div id="work" value="<?php echo $wc ?>"></div>
+    <button id="add_work" class="button addbutton" type="button">作業内容追加</button>
+    <?php
     $sc = 0;
     foreach ($report['Share'] as $share):
         $sc++; ?>
@@ -102,15 +95,9 @@
                 'value' => $share["content"],
                 'class' => 'textarea']);        
     endforeach; ?>
-   
-    
+    <div id="share" value="<?php echo $sc ?>"></div>
+    <button id="add_share" class="button addbutton" type="button">気づき・共有追加</button>
     <?php
-        echo $this->Html->link('気づき・共有追加', [
-                'action' => 'create_share', 
-                $report['Report']['id']
-            ], 
-            ['class' => ['button', 'addbutton']]);
-
         echo $this->Form->button('作成', [
                 'type' => 'submit',
                 'escape' => true,
