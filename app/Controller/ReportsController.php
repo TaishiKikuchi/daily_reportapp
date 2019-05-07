@@ -235,6 +235,7 @@ class ReportsController extends AppController
 
     public function load_work($user, $report_id)
     {
+        $this->autoRender = false;
         //まず日報の存在するかどうかをチェック(report_idがあるかどうかで判別)
         //無かったらcreate_report()で日報作成
 
@@ -262,26 +263,11 @@ class ReportsController extends AppController
             $subjects[] = $result['data']['card']['name'];
         endforeach;
 
-        //ここ以降にsubject配列の重複削除してworksテーブルの更新をする作業を書く
-        if (!empty($subjects)) {
-            $this->Report->Work->deleteAll(['report_id' => $report_id], false);
-            $subjects = array_unique($subjects);
-            $subjects = array_values($subjects);
-            $this->log($subjects, LOG_DEBUG);
-            foreach ($subjects as $subject) :
-                $data = ['Work' => [
-                        'report_id' => $report_id,
-                        'subject' => $subject,
-                        'created' => date("Y/m/d H:i")
-                ]];
+        $subjects = array_unique($subjects);
+        $subjects = array_values($subjects);
+        //$this->log($subjects, LOG_DEBUG);
 
-                $this->Report->Work->create();
-                $this->Report->Work->save($data);
-            endforeach;
-        } else {
-            $this->Session->setFlash(__('作業内容が見つかりませんでした。'));
-        }
-        return $this->redirect(array('controller' => 'reports', 'action' => 'mypage'));
+        echo json_encode($subjects);
     }
 
 

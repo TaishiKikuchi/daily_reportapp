@@ -1,13 +1,13 @@
 <?php
     echo $this->Html->css('mypage_style');
     echo $this->element('header'); ?>
-    <p><?php echo $this->Html->link('作業内容読み込み', 
+    <?php  echo $this->Html->link('作業内容読み込み', 
         array('controller' => 'reports', 
         'action' => 'load_work', 
         $report['Report']['user_id'],
         $report['Report']['id']), 
         array('class' => 'button')); ?>
-    </p>
+<button type="button" onclick="getWork(<?php echo $report['Report']['id'] ?>,<?php echo $report['Report']['user_id'] ?>)">作業内容読み込み</button>
 
 <div class="container"> 
     <div class="report_form">
