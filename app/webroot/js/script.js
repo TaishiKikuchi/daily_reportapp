@@ -6,25 +6,21 @@ const addshareblock = document.getElementById('share');
 
 function delWorkForm(id){
     let delworkblock = document.getElementById('work_' + id);
-    console.log(id)
-    console.log(delworkblock);
     delworkblock.innerHTML = '';
 }
 
 function delShareForm(id){
     let delshareblock = document.getElementById('share_' + id);
-    console.log(id)
-    console.log(delshareblock);
     delshareblock.innerHTML = '';
 }
 
-function addWorkForm(){
+function addWorkForm(work){
     //今のままだとaddform二回以上押されると最初か最後のフォームの入力した有効にならない!!! idの数字がボタン押されるごとに増える必要あり
     let id = parseInt(addworkblock.getAttribute('value')) + 1;
     addworkblock.insertAdjacentHTML('beforeend',
-    '<div id="work_'+ id +'"><div>作業内容:<span><button type="button" class="delbutton button" onclick="delWorkForm('+ id +')">削除</button></span></div>' +
+    '<div id="work_'+ id +'"><div>作業内容: <span><button type="button" class="delbutton button" onclick="delWorkForm('+ id +')">削除</button></span></div>' +
     '<div class="inputtext">' +
-    '<input name="data[Work]['+ id +'][subject]" class="textarea" maxlength="100" type="text" id="Work'+ id +'Subject"></div>' +
+    '<input name="data[Work]['+ id +'][subject]" class="textarea" maxlength="100" type="text" id="Work'+ id +'Subject" value="'+ work +'"></div>' +
     '<div class="timeblock">' +
     '<div>開始時間 <select name="data[Work]['+ id +'][starttime][hour]" id="Work'+ id +'StarttimeHour">' +
     '<option value="08" selected="selected">8</option>' +
@@ -74,7 +70,7 @@ function addWorkForm(){
 function addShareForm(){
     let id = parseInt(addshareblock.getAttribute('value')) + 1;
     addshareblock.insertAdjacentHTML('beforeend',
-    '<div id="share_'+ id +'"><div>気づき・共有:<span><button type="button" class="delbutton button" onclick="delShareForm('+ id +')">削除</button></span></div>' +
+    '<div id="share_'+ id +'"><div>気づき・共有: <span><button type="button" class="delbutton button" onclick="delShareForm('+ id +')">削除</button></span></div>' +
     '<div class="input textarea">' +
     '<textarea name="data[Share]['+ id +'][content]" rows="3" class="textarea" cols="30" type="text" id="Share'+ id +'content"></textarea></div></div>');
     document.getElementById('share').setAttribute('value', id);
@@ -82,3 +78,18 @@ function addShareForm(){
 
 addwork.addEventListener('click', addWorkForm);
 addshare.addEventListener('click', addShareForm);
+
+function getWork(report_id, user_id){
+        const request = new XMLHttpRequest();
+        request.open("GET", "http://localhost:8080/daily_reportapp/reports/load_work/"+ user_id +"/" + report_id);
+        request.addEventListener("load", (event) => {
+            let works = JSON.parse(event.target.responseText);
+            works.forEach((element) => {
+                console.log(element);
+                addWorkForm(element);
+              });
+            
+
+        });
+        request.send();
+}
