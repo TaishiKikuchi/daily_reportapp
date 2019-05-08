@@ -1,25 +1,19 @@
 <?php
     echo $this->Html->css('mypage_style');
     echo $this->element('header'); ?>
-    <?php  echo $this->Html->link('作業内容読み込み', 
-        array('controller' => 'reports', 
-        'action' => 'load_work', 
-        $report['Report']['user_id'],
-        $report['Report']['id']), 
-        array('class' => 'button')); ?>
-<button type="button" onclick="getWork(<?php echo $report['Report']['id'] ?>,<?php echo $report['Report']['user_id'] ?>)">作業内容読み込み</button>
-
+<button type="button" class="button getbutton" onclick="getWork(<?php echo $report['Report']['id'] ?>,<?php echo $auth['id'] ?>)">作業内容読み込み</button>
+<button type="button" class="button getbutton" onclick="getCardName('kikichitaishi')">作業内容読み込み2</button>
 <div class="container"> 
     <div class="report_form">
 <?php
     echo $this->Form->create('Report');
     echo $this->Form->input('title', [
-        'default' => $report['Report']['title'], 
+        'default' => date("m/d") . $auth['username'] . "'日報", 
         'div' => false
     ]);
     echo $this->Form->input('user_id', [
-        'type' => 'hidden', 
-        'value' => $report['Report']['user_id']
+        'type' => 'hidden',
+        'value' => $auth['id']
     ]);
     echo $this->Form->input('id', [
         'type' => 'hidden', 
@@ -74,7 +68,7 @@
     </div>
     <?php endforeach; ?>
     <div id="work" value="<?php echo $wc ?>"></div>
-    <button id="add_work" class="button addbutton" type="button">作業内容追加</button>
+    <button id="add_work" class="button addbutton" type="button" value="">作業内容追加</button>
     <?php
     $sc = 0;
     foreach ($report['Share'] as $share):

@@ -35,6 +35,10 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+  			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  			crossorigin="anonymous"></script>
+	<script src="https://api.trello.com/1/client.js?key=2c84b463fb747f6f1f0342e3018608b4"></script>
 </head>
 <body>
 	<div id="container">

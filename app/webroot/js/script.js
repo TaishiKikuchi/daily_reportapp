@@ -14,7 +14,11 @@ function delShareForm(id){
     delshareblock.innerHTML = '';
 }
 
-function addWorkForm(work){
+function addform() {
+    addWorkForm();
+}
+
+function addWorkForm(work=""){
     //今のままだとaddform二回以上押されると最初か最後のフォームの入力した有効にならない!!! idの数字がボタン押されるごとに増える必要あり
     let id = parseInt(addworkblock.getAttribute('value')) + 1;
     addworkblock.insertAdjacentHTML('beforeend',
@@ -67,7 +71,8 @@ function addWorkForm(work){
     document.getElementById('work').setAttribute('value', id);
 }
 
-function addShareForm(){
+function addShareForm(test){
+    console.log(test);
     let id = parseInt(addshareblock.getAttribute('value')) + 1;
     addshareblock.insertAdjacentHTML('beforeend',
     '<div id="share_'+ id +'"><div>気づき・共有: <span><button type="button" class="delbutton button" onclick="delShareForm('+ id +')">削除</button></span></div>' +
@@ -76,20 +81,51 @@ function addShareForm(){
     document.getElementById('share').setAttribute('value', id);
 }
 
-addwork.addEventListener('click', addWorkForm);
+addwork.addEventListener('click', addform);
 addshare.addEventListener('click', addShareForm);
 
 function getWork(report_id, user_id){
-        const request = new XMLHttpRequest();
-        request.open("GET", "http://localhost:8080/daily_reportapp/reports/load_work/"+ user_id +"/" + report_id);
-        request.addEventListener("load", (event) => {
-            let works = JSON.parse(event.target.responseText);
-            works.forEach((element) => {
-                console.log(element);
-                addWorkForm(element);
-              });
-            
-
+    const request = new XMLHttpRequest();
+    request.open("GET", "http://localhost:8080/daily_reportapp/reports/load_work/"+ user_id +"/" + report_id);
+    request.addEventListener("load", (event) => {
+        const works = JSON.parse(event.target.responseText);
+        console.log(works);
+        works.forEach((element) => {
+            addWorkForm(element);
         });
-        request.send();
+    });
+    request.send();
 }
+
+//client.js用
+const authenticationSuccess = function() {
+    console.log('Successful authentication');
+};
+  
+const authenticationFailure = function() {
+    console.log('Failed authentication');
+};
+
+window.Trello.authorize({
+    type: 'popup',
+    name: 'daily_reportapp',
+    scope: {
+      read: 'true',
+      write: 'true' },
+    expiration: '1hour',
+    success: authenticationSuccess,
+    error: authenticationFailure
+});
+
+
+function getCardName(user_id) {
+    const date = new Date();
+    const month = date.getMonth() + 1;
+    let result =
+        Trello.get('/members/'+ user_id +'/actions',{
+            fields: "data,date",
+            since: date.getFullYear() + '-' + month + '-' + date.getDate()
+        });
+    console.log(result);
+}
+

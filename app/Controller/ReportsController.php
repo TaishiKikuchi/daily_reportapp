@@ -55,6 +55,7 @@ class ReportsController extends AppController
 
     public function mypage($id = null)
     {
+        //$this->log($this->request->data, LOG_DEBUG);
         if ($this->request->is('post')) {
             $this->log($this->request->data, LOG_DEBUG);
             if ($this->Report->saveAssociated($this->request->data, ['deep' => true])) {
@@ -259,13 +260,16 @@ class ReportsController extends AppController
         $response = json_decode($HttpSocket->get($url, array($data))->body, true);
         $subjects = array();
      
+        $this->log($response, LOG_DEBUG);
         foreach ($response as $result) :
-            $subjects[] = $result['data']['card']['name'];
+            if (isset($result['data']['card']['name'])) {
+                $subjects[] = $result['data']['card']['name'];
+            }
         endforeach;
 
         $subjects = array_unique($subjects);
         $subjects = array_values($subjects);
-        //$this->log($subjects, LOG_DEBUG);
+        $this->log($subjects, LOG_DEBUG);
 
         echo json_encode($subjects);
     }
