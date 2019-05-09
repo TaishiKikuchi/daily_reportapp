@@ -1,8 +1,7 @@
 <?php
     echo $this->Html->css('mypage_style');
     echo $this->element('header'); ?>
-<button type="button" class="button getbutton" onclick="getWork(<?php echo $report['Report']['id'] ?>,<?php echo $auth['id'] ?>)">作業内容読み込み</button>
-<button type="button" class="button getbutton" onclick="getCardName('kikichitaishi')">作業内容読み込み2</button>
+<button type="button" class="button getbutton" onclick="getCardName('kikichitaishi')">作業内容読み込み</button>
 <div class="container"> 
     <div class="report_form">
 <?php

@@ -4,21 +4,21 @@ const addshare = document.getElementById('add_share');
 const addworkblock = document.getElementById('work');
 const addshareblock = document.getElementById('share');
 
-function delWorkForm(id){
+const delWorkForm = id =>{
     let delworkblock = document.getElementById('work_' + id);
     delworkblock.innerHTML = '';
 }
 
-function delShareForm(id){
+const delShareForm = id => {
     let delshareblock = document.getElementById('share_' + id);
     delshareblock.innerHTML = '';
 }
 
-function addform() {
+const addform = () => {
     addWorkForm();
 }
 
-function addWorkForm(work=""){
+const addWorkForm = (work="") => {
     //今のままだとaddform二回以上押されると最初か最後のフォームの入力した有効にならない!!! idの数字がボタン押されるごとに増える必要あり
     let id = parseInt(addworkblock.getAttribute('value')) + 1;
     addworkblock.insertAdjacentHTML('beforeend',
@@ -71,7 +71,7 @@ function addWorkForm(work=""){
     document.getElementById('work').setAttribute('value', id);
 }
 
-function addShareForm(test){
+const addShareForm = test => {
     console.log(test);
     let id = parseInt(addshareblock.getAttribute('value')) + 1;
     addshareblock.insertAdjacentHTML('beforeend',
@@ -84,25 +84,13 @@ function addShareForm(test){
 addwork.addEventListener('click', addform);
 addshare.addEventListener('click', addShareForm);
 
-function getWork(report_id, user_id){
-    const request = new XMLHttpRequest();
-    request.open("GET", "http://localhost:8080/daily_reportapp/reports/load_work/"+ user_id +"/" + report_id);
-    request.addEventListener("load", (event) => {
-        const works = JSON.parse(event.target.responseText);
-        console.log(works);
-        works.forEach((element) => {
-            addWorkForm(element);
-        });
-    });
-    request.send();
-}
 
 //client.js用
-const authenticationSuccess = function() {
+const authenticationSuccess = () => {
     console.log('Successful authentication');
 };
   
-const authenticationFailure = function() {
+const authenticationFailure = () => {
     console.log('Failed authentication');
 };
 
@@ -118,14 +106,26 @@ window.Trello.authorize({
 });
 
 
-function getCardName(user_id) {
-    const date = new Date();
+const getCardName = async(user_id) => {
+    let date = new Date();
+    date.setTime(date.getTime() - 1000*60*60*9);
     const month = date.getMonth() + 1;
-    let result =
-        Trello.get('/members/'+ user_id +'/actions',{
+    const response =
+        await Trello.get('/members/'+ user_id +'/actions',{
             fields: "data,date",
-            since: date.getFullYear() + '-' + month + '-' + date.getDate()
+            since: date.getFullYear() + '-' + month + '-' + date.getDate() + ':0:00'
         });
-    console.log(result);
-}
 
+    console.log(response);
+    let subjects = [];
+    response.forEach((result) => {
+        if (result['data']['card']) {
+            subjects.push(result['data']['card']['name']);
+        }
+    });
+
+    subjects = new Set(subjects);
+    subjects.forEach((value) => {
+        addWorkForm(value);
+    });
+}

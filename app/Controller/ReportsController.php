@@ -234,47 +234,6 @@ class ReportsController extends AppController
         return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
     }
 
-    public function load_work($user, $report_id)
-    {
-        $this->autoRender = false;
-        //まず日報の存在するかどうかをチェック(report_idがあるかどうかで判別)
-        //無かったらcreate_report()で日報作成
-
-        if (!isset($report_id)) {
-            $report_id = create_report($user);
-        }
-
-        //$user['User']['task']で
-        // こっちはtrelloのユーザーid取得
-        $UsersController = new UsersController;
-        $user_id =  $UsersController->getUsers($user);
-        $url = "https://trello.com/1/members/" . $user_id . "/" . "actions/";
-        $data = [
-            'key' => TRELLO_APIKEY,
-            'token' => TRELLO_APITOKEN,
-            'fields' => ['data','date'],
-            'since' => date("Y-m-d", strtotime('-9 hours'))
-        ];
-        
-        $HttpSocket = new HttpSocket();
-        $response = json_decode($HttpSocket->get($url, array($data))->body, true);
-        $subjects = array();
-     
-        $this->log($response, LOG_DEBUG);
-        foreach ($response as $result) :
-            if (isset($result['data']['card']['name'])) {
-                $subjects[] = $result['data']['card']['name'];
-            }
-        endforeach;
-
-        $subjects = array_unique($subjects);
-        $subjects = array_values($subjects);
-        $this->log($subjects, LOG_DEBUG);
-
-        echo json_encode($subjects);
-    }
-
-
     public function create_report($users)
     {
         //日報の作成
