@@ -100,7 +100,7 @@ window.Trello.authorize({
     scope: {
       read: 'true',
       write: 'true' },
-    expiration: '1hour',
+    expiration: '1day',
     success: authenticationSuccess,
     error: authenticationFailure
 });
@@ -109,11 +109,11 @@ window.Trello.authorize({
 const getCardName = async(user_id) => {
     let date = new Date();
     date.setTime(date.getTime() - 1000*60*60*9);
-    const month = date.getMonth() + 1;
+    const month = ("0"+(date.getMonth() + 1)).slice(-2);
     const response =
         await Trello.get('/members/'+ user_id +'/actions',{
             fields: "data,date",
-            since: date.getFullYear() + '-' + month + '-' + date.getDate() + ':0:00'
+            since: date.getFullYear() + '-' + month + '-' + date.getDate() + 'T00:00Z'
         });
 
     console.log(response);
@@ -128,4 +128,8 @@ const getCardName = async(user_id) => {
     subjects.forEach((value) => {
         addWorkForm(value);
     });
+
+    if(Object.keys(subjects).length === 0) {
+        alert('取得できる作業内容がありません');
+    }
 }

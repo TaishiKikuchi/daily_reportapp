@@ -4,6 +4,11 @@
     resize: vertical;
 }
 
+.reporttitle {
+    font-size: 25px;
+    color: rebeccapurple;
+}
+
 .button {
     font-size: 13px;
     margin: 1px;

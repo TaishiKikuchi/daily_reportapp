@@ -1,14 +1,16 @@
 <?php
     echo $this->Html->css('mypage_style');
     echo $this->element('header'); ?>
-<button type="button" class="button getbutton" onclick="getCardName('kikichitaishi')">作業内容読み込み</button>
+<button type="button" class="button getbutton" onclick="getCardName('<?php echo $task ?>')">作業内容読み込み</button>
 <div class="container"> 
     <div class="report_form">
 <?php
     echo $this->Form->create('Report');
     echo $this->Form->input('title', [
         'default' => date("m/d") . $auth['username'] . "'日報", 
-        'div' => false
+        'div' => false,
+        'class' => 'reporttitle',
+        'label' => false
     ]);
     echo $this->Form->input('user_id', [
         'type' => 'hidden',
@@ -20,12 +22,11 @@
     ]);
     
     $wc = 0;
-
+    if (isset($report)) {
     foreach ($report['Work'] as $work):
         $wc++; ?>
         <div>作業内容: <span> <?php
-         echo $this->Html->link('削除', 
-            [
+         echo $this->Html->link('削除', [
                 'controller' => 'reports', 
                 'action' => 'delete_work', 
                 $work['id']], 
@@ -65,11 +66,13 @@
         ]); ?>
         </div>
     </div>
-    <?php endforeach; ?>
+    <?php endforeach; 
+    } ?>
     <div id="work" value="<?php echo $wc ?>"></div>
     <button id="add_work" class="button addbutton" type="button" value="">作業内容追加</button>
     <?php
     $sc = 0;
+    if (isset($report)) {
     foreach ($report['Share'] as $share):
         $sc++; ?>
         <div>気づき・共有<span>
@@ -78,7 +81,7 @@
             'controller' => 'reports', 
             'action' => 'delete_share', 
             $share['id']], 
-            ['class' => 'button']); ?>
+            ['class' => 'button','glyphicon', 'glyphicon-pencil']); ?>
         </span></div>
     <?php
         echo $this->Form->input('Share.' . $sc . '.id', array('type' => 'hidden','value' => $share['id']));
@@ -87,11 +90,17 @@
                 'label' => false,
                 'value' => $share["content"],
                 'class' => 'textarea']);        
-    endforeach; ?>
+    endforeach; 
+    } ?>
     <div id="share" value="<?php echo $sc ?>"></div>
     <button id="add_share" class="button addbutton" type="button">気づき・共有追加</button>
     <?php
-        echo $this->Form->button('作成', [
+    if (isset($report)) {
+        $btname ='更新';
+    } else {
+        $btname ='作成';
+    }
+        echo $this->Form->button($btname , [
                 'type' => 'submit',
                 'escape' => true,
                 'class' => ['button', 'postbutton']]);

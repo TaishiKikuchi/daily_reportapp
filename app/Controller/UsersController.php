@@ -4,6 +4,7 @@ App::uses('AppController', 'Controller');
 
 class UsersController extends AppController
 {
+    public $helpers = ['Html', 'Form', 'Session'];
 
     public function beforeFilter()
     {
@@ -29,14 +30,20 @@ class UsersController extends AppController
     public function add()
     {
         if ($this->request->is('post')) {
-            $this->User->create();
-            if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('The user has been saved'));
-                return $this->redirect(array('controller' => 'reports', 'action' => 'index'));
+            if ($this->User->validates()) {
+                $this->User->create();
+                if ($this->User->save($this->request->data)) {
+                    $this->Session->setFlash(__('The user has been saved'));
+                    return $this->redirect(array('controller' => 'users', 'action' => 'login'));
+                }
+                $this->Session->setFlash(
+                    __('The user could not be saved. Please, try again.')
+                );
+            } else {
+                $this->Session->setFlash(
+                    __('validatation error Please, try again.')
+                );
             }
-            $this->Session->setFlash(
-                __('The user could not be saved. Please, try again.')
-            );
         }
     }
 

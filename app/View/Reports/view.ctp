@@ -1,27 +1,15 @@
 <?php echo $this->element('header'); ?>
-<table>
-    <tr>
-        <th>id</th>
-        <th>title</th>
-        <th>works</th>
-        <th>気づき・共有</th>
-        <th>Created</th>
-    </tr> 
-    <tr>
-
-        <td><?php echo $report['Report']['id']; ?></td>
-        <td><?php echo $report['Report']['title']; ?></td>
-        <td>
-            <?php foreach ($report['Work'] as $work): ?>
-            <p><?php echo $work["subject"]; ?> :<?php echo $work["starttime"]; ?> <p>
-            <?php endforeach; ?>
-        </td>
-        <td>
-            <?php foreach ($report['Share'] as $share): ?>
-            <p><?php echo $share["content"]; ?></p>
-            <?php endforeach; ?>
-        </td>
-        <td><?php echo $report['Report']['created']; ?></td>
-    </tr>
-</table>
-<p><small>Created: <?php echo $report['Report']['created']; ?></small></p>
+<div class="viewcontainer">
+    <div class="report">
+        <div class="stitle">日報タイトル</div>
+            <div><?php echo $report['Report']['title']; ?></div>
+        <div class="stitle">作業内容</div>
+        <?php foreach ($report['Work'] as $work): ?>
+            <span><div><?php echo $work["subject"];?> 開始時間: <?php echo $work["starttime"]; ?></div></span>
+        <?php endforeach; ?>
+        <div class="stitle">気づき・共有</div>
+        <?php foreach ($report['Share'] as $share): ?>
+            <div><?php echo $share["content"];?></div>
+        <?php endforeach; ?>
+    </div>
+</div>

@@ -1,12 +1,14 @@
-<div class="users form">
-<?php echo $this->Form->create('User');
-    echo $this->Html->css('cake.generic'); ?>
+<?php echo $this->Html->css('users_style'); ?>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<div class="users form form-group">
+<?php echo $this->Form->create('User'); ?>
     <fieldset>
         <legend><?php echo __('Add User'); ?></legend>
-        <?php echo $this->Form->input('username');
-        echo $this->Form->input('password');
-        echo $this->Form->input('departmentcode', array(
-            'options' => array(
+        <?php echo $this->Form->input('username', ['class' => 'form-control']);
+        echo $this->Form->input('password', ['class' => 'form-control', 'placeholder' => '8文字以上']);
+        echo $this->Form->input('departmentcode', [
+            'options' => [
                 '1' => 'セールスマーケティング部', 
                 '2' => 'CRM戦略推進部', 
                 '3' => 'CRMマネジメントサービス', 
@@ -14,10 +16,17 @@
                 '5' => '管理部', 
                 '6' => 'CRM協会', 
                 '7' => 'その他'
-            )
-        ));
-        echo $this->Form->input('task');
+            ],
+            'class' => 'form-control'
+        ]);
+        echo $this->Form->input('task', ['class' => 'form-control', 'placeholder' => 'trelloのユーザid']);
     ?>
     </fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
+    
+<?php
+    echo $this->Form->button('作成' , [
+        'type' => 'submit',
+        'escape' => true,
+        'class' =>'btn btn-primary']);
+    echo $this->Form->end(); ?>
 </div>

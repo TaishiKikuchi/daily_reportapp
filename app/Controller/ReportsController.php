@@ -55,6 +55,7 @@ class ReportsController extends AppController
 
     public function mypage($id = null)
     {
+        $this->loadModel('User');
         //$this->log($this->request->data, LOG_DEBUG);
         if ($this->request->is('post')) {
             $this->log($this->request->data, LOG_DEBUG);
@@ -69,16 +70,26 @@ class ReportsController extends AppController
 
         $report = $this->Report->find('all', [
             'order' => ['Report.created' => 'desc'],
-            'conditions' => ['Report.user_id' => $user_id],
+            'conditions' => [
+                'Report.user_id' => $user_id,
+                'Report.created >=' => date("Y/m/d")
+            ],
             'limit' => 1
         ]);
 
-        $this->set('report', $report[0]);
+        if ($report) {
+            $this->set('report', $report[0]);
+        } else {
+            $this->set('report', null);
+        }
         //ここはまあそのままでokのようなきがする
         $this->set('shares', $this->Report->Share->find('all', [
                 'order' => 'Share.created ASC',
                 'limit' => 20
         ]));
+
+        $task = $this->User->findById($user_id);
+        $this->set('task', $task['User']['task']);
 
         $this->set('subtitle', 'マイページ');
     }
@@ -181,7 +192,7 @@ class ReportsController extends AppController
         parent::beforeFilter();
         $this->Auth->allow('index', 'logout');
     }
-
+/*
     public function create_work($id)
     {
         $data = ['Work' => [
@@ -197,6 +208,7 @@ class ReportsController extends AppController
         }
         return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
     }
+*/
 
     public function delete_work($id)
     {
@@ -207,7 +219,7 @@ class ReportsController extends AppController
         }
         return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
     }
-
+/*
     public function create_share($id)
     {
         $data = ['Share' => [
@@ -223,7 +235,7 @@ class ReportsController extends AppController
         }
         return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
     }
-
+*/
     public function delete_share($id)
     {
         if ($this->Report->Share->delete($id)) {

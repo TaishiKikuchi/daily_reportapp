@@ -14,8 +14,8 @@ class User extends AppModel
         ),
         'password' => array(
             'required' => array(
-                'rule' => 'notEmpty',
-                'message' => 'A password is required'
+                'rule' => array('minLength', '8'),
+                'message' => '最低8文字です'
             )
         ),
         'departmentcode' => array(

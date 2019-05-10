@@ -7,3 +7,17 @@
 body {
     background-color: #f5f9fa;
 }
+
+.viewcontainer {
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.stitle {
+    font-size: 20px;
+    color: blueviolet;
+}
+
+.report {
+    font-size: 20px;
+}
