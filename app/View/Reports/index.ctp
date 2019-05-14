@@ -16,20 +16,16 @@
         'default' => 7,
         'value' => $code
     ));
-    echo $this->Form->end();
-    ?>
+    echo $this->Form->end(); ?>
     <div class="report_article">
-    <?php
-    foreach ($reports as $report): ?>
+    <?php foreach ($reports as $report): ?>
     <div class="report_container"><?php
         echo $this->Html->link($report['Report']['title'], array('action' => 'view', $report['Report']['id']));
         foreach ($report['Work'] as $work): ?>
-        <div class="report_item"><?php echo $work['subject']; ?></div>
-        <div><?php echo $work['starttime']; ?></div>
-    <?php   
-        endforeach; ?>
+        <div class="report_item"><?= h($work['subject']); ?></div>
+        <div><?= h($work['starttime']); ?></div>
+        <?php endforeach; ?>
     </div>
-    <?php
-    endforeach; ?>
+    <?php endforeach; ?>
     </div>
     <?php unset($report); ?>

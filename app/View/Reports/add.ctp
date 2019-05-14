@@ -3,8 +3,7 @@
 echo $this->Form->create('Report');
 echo $this->Form->input('title', array(
     'value' => $auth['username'] . "'s日報")); ?>
-<?php 
-foreach ($report['Work'] as $work):
+<?php foreach ($report['Work'] as $work):
     echo $this->Form->input('subject', 
         array('div' => false, 
               'default' => $work['subject']
@@ -12,5 +11,4 @@ foreach ($report['Work'] as $work):
     ); 
 endforeach;     
 echo $this->Form->input('content',array('rows' => '3'));
-echo $this->Form->end('作成');
-?>
+echo $this->Form->end('作成'); ?>

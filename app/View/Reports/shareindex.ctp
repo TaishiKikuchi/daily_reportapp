@@ -7,17 +7,14 @@ echo $this->Html->css('shareindex_style'); ?>
         <th>気づき・共有</th>
     </tr>
 
-    <?php
-    foreach ($shares as $share): ?>
+    <?php foreach ($shares as $share): ?>
     <tr>
-        <td>        
-            <?php 
-            echo $share['Share']['content']; ?>
+        <td>
+            <?= h($share['Share']['content']); ?>
         </td>
     </tr>
-    <?php
-    endforeach; ?>
+    <?php endforeach; ?>
 </table>
 <div class='pager'>
-<?php echo $this->Paginator->numbers(); ?>
+<?= $this->Paginator->numbers(); ?>
 </div>

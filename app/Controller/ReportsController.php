@@ -61,6 +61,7 @@ class ReportsController extends AppController
             $this->log($this->request->data, LOG_DEBUG);
             if ($this->Report->saveAssociated($this->request->data, ['deep' => true])) {
                 $this->Session->setFlash(__('Your post has been saved.'));
+                $this->chwrite($this->request->data);
                 return $this->redirect(['action' => 'mypage']);
             }
             $this->Session->setFlash(__('Unable to add your post.'));
@@ -92,6 +93,29 @@ class ReportsController extends AppController
         $this->set('task', $task['User']['task']);
 
         $this->set('subtitle', 'マイページ');
+    }
+
+    public function chwrite($data)
+    {
+        $room_id = "151590091";
+        //ここから reportテキストをフォーマットに合わせて作る
+
+
+        //ここまで
+        $request = ['header' => [
+                    'X-ChatWorkToken' => CHATWORKTOKEN,
+                    'Content-Type' => 'application/x-www-form-urlencoded'],
+                    'body' => ['body' => $content]
+        ];
+        $url = "https://api.chatwork.com/v2/rooms/". $room_id ."/messages";
+
+        $data = [];
+
+
+        $HttpSocket = new HttpSocket();
+        $response = $HttpSocket->post($url, $data, $request);
+        $this->log($response, LOG_DEBUG);
+        $this->log($HttpSocket, LOG_DEBUG);
     }
 
     public function view($id = null)

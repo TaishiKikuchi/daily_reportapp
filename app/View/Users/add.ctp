@@ -4,8 +4,8 @@
 <div class="users form form-group">
 <?php echo $this->Form->create('User'); ?>
     <fieldset>
-        <legend><?php echo __('Add User'); ?></legend>
-        <?php echo $this->Form->input('username', ['class' => 'form-control']);
+        <legend><?= h(__('Add User')); ?></legend>
+        <?= $this->Form->input('username', ['class' => 'form-control']);
         echo $this->Form->input('password', ['class' => 'form-control', 'placeholder' => '8文字以上']);
         echo $this->Form->input('departmentcode', [
             'options' => [
@@ -23,8 +23,7 @@
     ?>
     </fieldset>
     
-<?php
-    echo $this->Form->button('作成' , [
+<?= $this->Form->button('作成' , [
         'type' => 'submit',
         'escape' => true,
         'class' =>'btn btn-primary']);

@@ -2,14 +2,14 @@
 <div class="viewcontainer">
     <div class="report">
         <div class="stitle">日報タイトル</div>
-            <div><?php echo $report['Report']['title']; ?></div>
+            <div><?= h($report['Report']['title']); ?></div>
         <div class="stitle">作業内容</div>
         <?php foreach ($report['Work'] as $work): ?>
-            <span><div><?php echo $work["subject"];?> 開始時間: <?php echo $work["starttime"]; ?></div></span>
+            <span><div><?= $work["subject"];?> 開始時間: <?= h($work["starttime"]); ?></div></span>
         <?php endforeach; ?>
         <div class="stitle">気づき・共有</div>
         <?php foreach ($report['Share'] as $share): ?>
-            <div><?php echo $share["content"];?></div>
+            <div><?= h($share["content"]); ?></div>
         <?php endforeach; ?>
     </div>
 </div>
