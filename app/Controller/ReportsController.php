@@ -58,7 +58,7 @@ class ReportsController extends AppController
         $this->loadModel('User');
         //$this->log($this->request->data, LOG_DEBUG);
         if ($this->request->is('post')) {
-            $this->log($this->request->data, LOG_DEBUG);
+            //$this->log($this->request->data, LOG_DEBUG);
             if ($this->Report->saveAssociated($this->request->data, ['deep' => true])) {
                 $this->Session->setFlash(__('Your post has been saved.'));
                 $this->chwrite($this->request->data);
@@ -95,12 +95,24 @@ class ReportsController extends AppController
         $this->set('subtitle', 'マイページ');
     }
 
-    public function chwrite($data)
+    public function chwrite($post)
     {
         $room_id = "151590091";
         //ここから reportテキストをフォーマットに合わせて作る
+        $workcontent = "【作業内容】\n";
+        $timecontent = "【作業時間】\n";
+        $sharecontent = "【気づき・共有】\n";
+        foreach ($post['Work'] as $value) :
+            $workcontent = $workcontent . $value['subject'] . "\n" ;
+            $timecontent = $timecontent . $value['starttime']['hour'] . ":" . $value['starttime']['min'] . "~" . " " .
+            $value['subject'] . "\n";
+        endforeach;
 
+        foreach ($post['Share'] as $value) :
+            $sharecontent = $sharecontent . $value['content'] . "\n" ;
+        endforeach;
 
+        $content = $workcontent . $timecontent . $sharecontent;
         //ここまで
         $request = ['header' => [
                     'X-ChatWorkToken' => CHATWORKTOKEN,
@@ -111,11 +123,30 @@ class ReportsController extends AppController
 
         $data = [];
 
-
+        $report = $this->Report->findById($post['Report']['id']);
+        $this->log($report['Report'], LOG_DEBUG);
         $HttpSocket = new HttpSocket();
-        $response = $HttpSocket->post($url, $data, $request);
+        if ($report['Report']['message_id'] == null) :
+            $response = $HttpSocket->post($url, $data, $request);
+        else :
+            $url = "https://api.chatwork.com/v2/rooms/". $room_id ."/messages" . "/" . $report['Report']['message_id'];
+            $response = $HttpSocket->put($url, $data, $request);
+        endif;
         $this->log($response, LOG_DEBUG);
-        $this->log($HttpSocket, LOG_DEBUG);
+        $this->log($url, LOG_DEBUG);
+        if ($response->code != 200) :
+            return $this->Session->setFlash('Your post has been saved. but chatworkに投稿できませんでした');
+        endif;
+
+        if ($report['Report']['message_id'] == null) :
+            $tmp = json_decode($response['body'], true);
+            $this->Report->read('message_id', $id = $post['Report']['id']);
+            $this->Report->set(['Report' => [
+                    'message_id' => $tmp['message_id']
+                ]
+            ]);
+            $this->Report->save();
+        endif;
     }
 
     public function view($id = null)
