@@ -97,7 +97,7 @@ class ReportsController extends AppController
 
     public function chwrite($post)
     {
-        $room_id = "151590091";
+        $room_id = "hogehoge";
         //ここから reportテキストをフォーマットに合わせて作る
         $workcontent = "【作業内容】\n";
         $timecontent = "【作業時間】\n";
@@ -119,7 +119,7 @@ class ReportsController extends AppController
                     'Content-Type' => 'application/x-www-form-urlencoded'],
                     'body' => ['body' => $content]
         ];
-        $url = "https://api.chatwork.com/v2/rooms/". $room_id ."/messages";
+        $url = "https://api.chatwork.com/v2/rooms/". CHATWORKROOMID ."/messages";
 
         $data = [];
 
@@ -129,7 +129,7 @@ class ReportsController extends AppController
         if ($report['Report']['message_id'] == null) :
             $response = $HttpSocket->post($url, $data, $request);
         else :
-            $url = "https://api.chatwork.com/v2/rooms/". $room_id ."/messages" . "/" . $report['Report']['message_id'];
+            $url = "https://api.chatwork.com/v2/rooms/". CHATWORKROOMID ."/messages" . "/" . $report['Report']['message_id'];
             $response = $HttpSocket->put($url, $data, $request);
         endif;
         $this->log($response, LOG_DEBUG);
