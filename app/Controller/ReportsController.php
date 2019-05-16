@@ -5,11 +5,12 @@ App::import("Controller", "Users");
 class ReportsController extends AppController
 {
     public $helpers = ['Html', 'Form'];
-    public $components = array('Paginator');
+    public $components = array('Paginator', 'Session');
 
     public $paginate = [
         'limit' => 5
     ];
+    public $ninsyostate = 1;
 
     public function index($code = null)
     {
@@ -56,6 +57,9 @@ class ReportsController extends AppController
     public function mypage($id = null)
     {
         $this->loadModel('User');
+        if ($this->ninsyostate != 1) {
+            $this->getGoogleClientToken();
+        }
         //$this->log($this->request->data, LOG_DEBUG);
         if ($this->request->is('post')) {
             //$this->log($this->request->data, LOG_DEBUG);
@@ -85,7 +89,7 @@ class ReportsController extends AppController
         }
         //ここはまあそのままでokのようなきがする
         $this->set('shares', $this->Report->Share->find('all', [
-                'order' => 'Share.created ASC',
+                'order' => 'Share.created DESC',
                 'limit' => 20
         ]));
 
@@ -99,12 +103,13 @@ class ReportsController extends AppController
     {
         $room_id = "hogehoge";
         //ここから reportテキストをフォーマットに合わせて作る
+        $title = $post['Report']['title'] . "\n";
         $workcontent = "【作業内容】\n";
         $timecontent = "【作業時間】\n";
         $sharecontent = "【気づき・共有】\n";
         foreach ($post['Work'] as $value) :
-            $workcontent = $workcontent . $value['subject'] . "\n" ;
-            $timecontent = $timecontent . $value['starttime']['hour'] . ":" . $value['starttime']['min'] . "~" . " " .
+            $workcontent = $workcontent . " ・" . $value['subject'] . "\n" ;
+            $timecontent = $timecontent . " ・" . $value['starttime']['hour'] . ":" . $value['starttime']['min'] . "~" . " " .
             $value['subject'] . "\n";
         endforeach;
 
@@ -112,7 +117,7 @@ class ReportsController extends AppController
             $sharecontent = $sharecontent . $value['content'] . "\n" ;
         endforeach;
 
-        $content = $workcontent . $timecontent . $sharecontent;
+        $content = $title . "\n" . $workcontent . "\n" . $timecontent . "\n" . $sharecontent;
         //ここまで
         $request = ['header' => [
                     'X-ChatWorkToken' => CHATWORKTOKEN,
@@ -124,9 +129,9 @@ class ReportsController extends AppController
         $data = [];
 
         $report = $this->Report->findById($post['Report']['id']);
-        $this->log($report['Report'], LOG_DEBUG);
+        //$this->log($report['Report'], LOG_DEBUG);
         $HttpSocket = new HttpSocket();
-        if ($report['Report']['message_id'] == null) :
+        if (!$report || $report['Report']['message_id'] == null) :
             $response = $HttpSocket->post($url, $data, $request);
         else :
             $url = "https://api.chatwork.com/v2/rooms/". CHATWORKROOMID ."/messages" . "/" . $report['Report']['message_id'];
@@ -138,7 +143,7 @@ class ReportsController extends AppController
             return $this->Session->setFlash('Your post has been saved. but chatworkに投稿できませんでした');
         endif;
 
-        if ($report['Report']['message_id'] == null) :
+        if (!$report || $report['Report']['message_id'] == null) :
             $tmp = json_decode($response['body'], true);
             $this->Report->read('message_id', $id = $post['Report']['id']);
             $this->Report->set(['Report' => [
@@ -314,5 +319,64 @@ class ReportsController extends AppController
             $this->Report->create();
             $this->Report->save($data);
         endforeach;
+    }
+
+  
+    public function getGoogleClientToken()
+    {
+        require_once '../../app/vendor/google-api-php-client/vendor/autoload.php';
+        // パスが通っていなければ設定
+        $path = '/daily_reportapp/app/Vendor/google-api-php-client/src';
+        set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+        $this->log(get_include_path() . PATH_SEPARATOR . $path, LOG_DEBUG);
+     
+        App::import('Vendor', 'Google_Client', array('file' => 'google-api-php-client/src/Google/Client.php'));
+        //App::import('Vendor', 'Google_Service_Calendar', array('file' => 'google-api-php-client/src/Google/Service/Resource.php'));
+
+        // OAuthクライアント認証用のJSONファイル
+        $oauth_credentials = "../../app/Config/client_secret.json";  // 上記でダウンロードしたJSONファイルのPATH
+
+        // Google認証後のリダイレクト先（「http://localhost/test/google-calendar/?code=アクセストークン」 という形でリダイレクトされる）
+        $redirect_uri = "http://localhost:8080/daily_reportapp/reports/mypage";
+     
+        $this->log('test1', LOG_DEBUG);
+        // Google API Client
+        $client = new Google_Client();
+        $client->setAuthConfig($oauth_credentials);
+        $client->setRedirectUri($redirect_uri);
+        $client->addScope(Google_Service_Calendar::CALENDAR);
+        $client->setAccessType("offline");   // トークンの自動リフレッシュ
+        $client->setApprovalPrompt("force"); // これがないと初回以外はリフレッシュトークンが得られない
+        $authUrl = $client->createAuthUrl();
+
+        $this->log('test2', LOG_DEBUG);
+     
+        // カレンダーAPI用のインスタンス生成
+        $cal_service  = new Google_Service_Calendar($client);
+        $this->log('test3', LOG_DEBUG);
+     
+        // 認証後codeを受け取ったらセッション保存
+        if (isset($this->request->query['code'])) {
+            $client->authenticate($this->request->query['code']);
+            $this->Session->write('token', $client->getAccessToken());
+            $this->redirect('http://' . $_SERVER['HTTP_HOST'] . '/daily_reportapp/reports/mypage');
+        }
+     
+        if ($this->Session->check('token')) {
+            $client->setAccessToken($this->Session->read('token'));
+        }
+             
+        if ($client->getAccessToken()) {
+            $this->log('testアクセストークン取得', LOG_DEBUG);
+            $results = $cal_service->events->listEvents("yrkdsti58@gmail.com");
+            $schedule = $results['items'][0]['summary'];
+            $this->log($schedule, LOG_DEBUG);
+            $this->ninsyostate = 1;
+            return $this->redirect(['action' => 'mypage']);
+        } else {
+            $auth_url = $client->createAuthUrl();
+            echo '<a href="'.$auth_url.'">認証</a>';
+        }
+        exit;
     }
 }

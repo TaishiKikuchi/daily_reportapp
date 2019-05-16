@@ -118,6 +118,7 @@ const getCardName = async(user_id) => {
 
     console.log(response);
     let subjects = [];
+
     response.forEach((result) => {
         if (result['data']['card']) {
             subjects.push(result['data']['card']['name']);
@@ -125,11 +126,31 @@ const getCardName = async(user_id) => {
     });
 
     subjects = new Set(subjects);
+    if(subjects.length == 0) {
+        alert('取得できる作業内容がありません');
+    }
+
     subjects.forEach((value) => {
         addWorkForm(value);
     });
+    /* async使ってみたバージョン
+    const createForm = async () => {
+        await response.forEach((result) => {
+            if (result['data']['card']) {
+                subjects.push(result['data']['card']['name']);
+            }
+        });
 
-    if(Object.keys(subjects).length === 0) {
-        alert('取得できる作業内容がありません');
-    }
+        subjects = new Set(subjects);
+        if(subjects.length == 0) {
+            alert('取得できる作業内容がありません');
+            console.log(subjects);
+        }
+
+        subjects.forEach((value) => {
+            addWorkForm(value);
+        });
+    };
+    createForm();
+    */
 }
