@@ -2,7 +2,7 @@
     echo $this->element('header');
     echo $this->Html->css('index_style');
     echo $this->Form->create('Report');
-    echo $this->Form->input('セレクトボックス', array(
+    echo $this->Form->input('部署選択', array(
         'options' => array(
             '1' => 'セールスマーケティング部', 
             '2' => 'CRM戦略推進部', 

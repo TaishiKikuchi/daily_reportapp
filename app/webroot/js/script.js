@@ -105,7 +105,6 @@ window.Trello.authorize({
     error: authenticationFailure
 });
 
-
 const getCardName = async(user_id) => {
     let date = new Date();
     date.setTime(date.getTime() - 1000*60*60*9);
@@ -133,6 +132,7 @@ const getCardName = async(user_id) => {
     subjects.forEach((value) => {
         addWorkForm(value);
     });
+}
     /* async使ってみたバージョン
     const createForm = async () => {
         await response.forEach((result) => {
@@ -153,4 +153,15 @@ const getCardName = async(user_id) => {
     };
     createForm();
     */
+const getCalendar = (email) => {
+    const request = new XMLHttpRequest();
+    request.open("GET", "http://localhost:8080/daily_reportapp/reports/getSchedules/");
+    request.addEventListener("load", (event) => {
+        let works = JSON.parse(event.target.responseText);
+        works.forEach((element) => {
+            console.log(element);
+            addWorkForm(element);
+        });
+    });
+    request.send();
 }

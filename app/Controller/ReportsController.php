@@ -1,6 +1,7 @@
 <?php
 App::uses('HttpSocket', 'Network/Http');
 App::import("Controller", "Users");
+App::import('Vendor', 'Google_Client', array('file' => 'google-api-php-client/src/Google/Client.php'));
 
 class ReportsController extends AppController
 {
@@ -10,7 +11,6 @@ class ReportsController extends AppController
     public $paginate = [
         'limit' => 5
     ];
-    public $ninsyostate = 1;
 
     public function index($code = null)
     {
@@ -56,13 +56,9 @@ class ReportsController extends AppController
 
     public function mypage($id = null)
     {
+        $this->getGoogleClientToken();
         $this->loadModel('User');
-        if ($this->ninsyostate != 1) {
-            $this->getGoogleClientToken();
-        }
-        //$this->log($this->request->data, LOG_DEBUG);
         if ($this->request->is('post')) {
-            //$this->log($this->request->data, LOG_DEBUG);
             if ($this->Report->saveAssociated($this->request->data, ['deep' => true])) {
                 $this->Session->setFlash(__('Your post has been saved.'));
                 $this->chwrite($this->request->data);
@@ -71,6 +67,7 @@ class ReportsController extends AppController
             $this->Session->setFlash(__('Unable to add your post.'));
         }
         $user_id = $this->Auth->user('id');
+
         //ここの処理はmodel側でやらせるべき？
 
         $report = $this->Report->find('all', [
@@ -324,37 +321,25 @@ class ReportsController extends AppController
   
     public function getGoogleClientToken()
     {
-        require_once '../../app/vendor/google-api-php-client/vendor/autoload.php';
         // パスが通っていなければ設定
         $path = '/daily_reportapp/app/Vendor/google-api-php-client/src';
         set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-        $this->log(get_include_path() . PATH_SEPARATOR . $path, LOG_DEBUG);
      
-        App::import('Vendor', 'Google_Client', array('file' => 'google-api-php-client/src/Google/Client.php'));
-        //App::import('Vendor', 'Google_Service_Calendar', array('file' => 'google-api-php-client/src/Google/Service/Resource.php'));
-
         // OAuthクライアント認証用のJSONファイル
         $oauth_credentials = "../../app/Config/client_secret.json";  // 上記でダウンロードしたJSONファイルのPATH
 
         // Google認証後のリダイレクト先（「http://localhost/test/google-calendar/?code=アクセストークン」 という形でリダイレクトされる）
         $redirect_uri = "http://localhost:8080/daily_reportapp/reports/mypage";
-     
-        $this->log('test1', LOG_DEBUG);
+
         // Google API Client
         $client = new Google_Client();
-        $client->setAuthConfig($oauth_credentials);
+        $client->setAuthConfig(AUTHCRE);
         $client->setRedirectUri($redirect_uri);
         $client->addScope(Google_Service_Calendar::CALENDAR);
         $client->setAccessType("offline");   // トークンの自動リフレッシュ
         $client->setApprovalPrompt("force"); // これがないと初回以外はリフレッシュトークンが得られない
         $authUrl = $client->createAuthUrl();
-
-        $this->log('test2', LOG_DEBUG);
-     
-        // カレンダーAPI用のインスタンス生成
-        $cal_service  = new Google_Service_Calendar($client);
-        $this->log('test3', LOG_DEBUG);
-     
+        
         // 認証後codeを受け取ったらセッション保存
         if (isset($this->request->query['code'])) {
             $client->authenticate($this->request->query['code']);
@@ -366,17 +351,36 @@ class ReportsController extends AppController
             $client->setAccessToken($this->Session->read('token'));
         }
              
-        if ($client->getAccessToken()) {
-            $this->log('testアクセストークン取得', LOG_DEBUG);
-            $results = $cal_service->events->listEvents("yrkdsti58@gmail.com");
-            $schedule = $results['items'][0]['summary'];
-            $this->log($schedule, LOG_DEBUG);
-            $this->ninsyostate = 1;
-            return $this->redirect(['action' => 'mypage']);
-        } else {
+        if (!$client->getAccessToken()) {
             $auth_url = $client->createAuthUrl();
             echo '<a href="'.$auth_url.'">認証</a>';
         }
-        exit;
+        return 0;
+    }
+
+    public function getSchedules()
+    {
+        $this->autoRender = false;
+        $optParams = array();
+        /* 日付指定する場合 */
+        $optParams["timeMin"]  = date("Y-m-d") . "T00:00:00+0900";  // "2017-01-01T00:00:00Z";
+        $optParams["timeMax"]  = date("Y-m-d") ."T23:59:59+0900";
+        $optParams["timeZone"] = "Asia/Tokyo";
+        $optParams["singleEvents"] = true;
+        $optParams["orderBy"]  = "startTime";     // orderBy指定する場合は singleEvents=true でないと怒られる
+        $email = EMAIL;
+        $client = new Google_Client();
+        $client->setAuthConfig(AUTHCRE);
+        // カレンダーAPI用のインスタンス生成
+        $client->setAccessToken($this->Session->read('token'));
+        $cal_service  = new Google_Service_Calendar($client);
+        $results = $cal_service->events->listEvents($email, $optParams);
+        $this->log($results['items'], LOG_DEBUG);
+        $schedules = [];
+        foreach ($results['items'] as $value) :
+            $schedules[] = $value['summary'];
+        endforeach;
+        
+        echo json_encode($schedules);
     }
 }

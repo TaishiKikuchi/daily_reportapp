@@ -108,3 +108,4 @@ CakeLog::config('error', array(
 ));
 
 require_once('const.php');
+require_once('../vendor/google-api-php-client/vendor/autoload.php');
