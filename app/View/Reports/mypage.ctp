@@ -47,11 +47,11 @@
         <?php 
             echo $this->Form->input('Work.' . $wc . '.starttime', [
                     'type' => 'time',
-                    'timeFormat' => '24',
-                    'interval' => 15,
-                    'round' => 'down',
                     'div' => false,
                     'label' => false,
+                    'interval' => 30,
+                    'options' => [1, 2, 3, 4, 5,6,7,8,9,10],
+                    'timeFormat' => '24',
                     'default' => $work['starttime']
             ]); ?>
             </div>
@@ -64,6 +64,7 @@
                     'interval' => 30,
                     'div' => false,
                     'label' => false,
+                    'options' => [8,9,10],
                     'default' => $work['endtime']
             ]); ?>
             </div>

@@ -375,12 +375,13 @@ class ReportsController extends AppController
         $client->setAccessToken($this->Session->read('token'));
         $cal_service  = new Google_Service_Calendar($client);
         $results = $cal_service->events->listEvents($email, $optParams);
-        $this->log($results['items'], LOG_DEBUG);
         $schedules = [];
         foreach ($results['items'] as $value) :
-            $schedules[] = $value['summary'];
+            $data = ['content' => $value['summary'], 'starttime' => $value['start']['dateTime'], 'endtime' => $value['end']['dateTime']];
+            $schedules[] = $data;
         endforeach;
+        $this->log($schedules, LOG_DEBUG);
         
-        echo json_encode($schedules);
+        return json_encode($schedules);
     }
 }

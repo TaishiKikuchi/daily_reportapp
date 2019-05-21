@@ -159,8 +159,8 @@ const getCalendar = (email) => {
     request.addEventListener("load", (event) => {
         let works = JSON.parse(event.target.responseText);
         works.forEach((element) => {
-            console.log(element);
-            addWorkForm(element);
+            console.log(element['content']);
+            addWorkForm(element['content']);
         });
     });
     request.send();
