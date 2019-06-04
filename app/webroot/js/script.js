@@ -155,7 +155,7 @@ const getCardName = async(user_id) => {
     */
 const getCalendar = (email) => {
     const request = new XMLHttpRequest();
-    request.open("GET", "http://localhost:8080/daily_reportapp/reports/getSchedules/");
+    request.open("GET", "http://localhost:8080/daily_reportapp/reports/getSchedules/" + email);
     request.addEventListener("load", (event) => {
         let works = JSON.parse(event.target.responseText);
         works.forEach((element) => {

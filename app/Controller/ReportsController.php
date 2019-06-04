@@ -91,7 +91,8 @@ class ReportsController extends AppController
         ]));
 
         $task = $this->User->findById($user_id);
-        $this->set('task', $task['User']['task']);
+        $this->set('trello_id', $task['User']['trello_id']);
+        $this->set('email', $task['User']['email']);
 
         $this->set('subtitle', 'マイページ');
     }
@@ -326,7 +327,7 @@ class ReportsController extends AppController
         set_include_path(get_include_path() . PATH_SEPARATOR . $path);
      
         // OAuthクライアント認証用のJSONファイル
-        $oauth_credentials = "../../app/Config/client_secret.json";  // 上記でダウンロードしたJSONファイルのPATH
+        $oauth_credentials = AUTHCRE;  // 上記でダウンロードしたJSONファイルのPATH
 
         // Google認証後のリダイレクト先（「http://localhost/test/google-calendar/?code=アクセストークン」 という形でリダイレクトされる）
         $redirect_uri = "http://localhost:8080/daily_reportapp/reports/mypage";
@@ -358,7 +359,7 @@ class ReportsController extends AppController
         return 0;
     }
 
-    public function getSchedules()
+    public function getSchedules($mail)
     {
         $this->autoRender = false;
         $optParams = array();
@@ -368,7 +369,7 @@ class ReportsController extends AppController
         $optParams["timeZone"] = "Asia/Tokyo";
         $optParams["singleEvents"] = true;
         $optParams["orderBy"]  = "startTime";     // orderBy指定する場合は singleEvents=true でないと怒られる
-        $email = EMAIL;
+        $email = $mail;
         $client = new Google_Client();
         $client->setAuthConfig(AUTHCRE);
         // カレンダーAPI用のインスタンス生成

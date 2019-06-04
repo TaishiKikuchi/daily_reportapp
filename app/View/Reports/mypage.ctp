@@ -1,8 +1,8 @@
 <?php
     echo $this->Html->css('mypage_style');
     echo $this->element('header'); ?>
-<button type="button" class="button getbutton" onclick="getCardName('<?= h($task) ?>')">Trello読み込み</button>
-<button type="button" class="button getbutton" onclick="getCalendar('<?= h('aaaa') ?>')">カレンダー読み込み</button>
+<button type="button" class="button getbutton" onclick="getCardName('<?= h($trello_id) ?>')">Trello読み込み</button>
+<button type="button" class="button getbutton" onclick="getCalendar('<?= h($email) ?>')">カレンダー読み込み</button>
 
 <div class="container"> 
     <div class="report_form">
