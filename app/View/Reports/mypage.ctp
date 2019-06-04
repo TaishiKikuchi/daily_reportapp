@@ -41,34 +41,6 @@
                     'label' => false,
                     'value' => $work['subject'],
                     'class' => 'textarea']); ?>
-            
-        <div class="timeblock">
-            <div>開始時間
-        <?php 
-            echo $this->Form->input('Work.' . $wc . '.starttime', [
-                    'type' => 'time',
-                    'div' => false,
-                    'label' => false,
-                    'interval' => 30,
-                    'options' => [1, 2, 3, 4, 5,6,7,8,9,10],
-                    'timeFormat' => '24',
-                    'default' => $work['starttime']
-            ]); ?>
-            </div>
-
-            <div>終了時間
-        <?php 
-            echo $this->Form->input('Work.' . $wc . '.endtime', [
-                    'type' => 'time',
-                    'timeFormat' => '24',
-                    'interval' => 30,
-                    'div' => false,
-                    'label' => false,
-                    'options' => [8,9,10],
-                    'default' => $work['endtime']
-            ]); ?>
-            </div>
-        </div>
         <?php endforeach; 
     endif ?>
     <div id="work" value="<?= h($wc) ?>"></div>
