@@ -52,37 +52,26 @@
                     'class' => 'textarea']);        
         endforeach; 
     endif ?>
-    <div id="work" value="<?= h($wc) ?>"></div>
-    <button id="add_work" class="button addbutton" type="button" value="">作業内容追加</button>
+        <div id="work" value="<?= h($wc) ?>"></div>
+        <button id="add_work" class="button addbutton" type="button" value="">作業内容追加</button>
+        <div>全体の振り返り</div>
     <?php
-    $sc = 0;
-    if (isset($report)) :
-        foreach ($report['Share'] as $share):
-            $sc++; ?>
-            <div>全体の振り返り<span>
-        <?php
-            echo $this->Html->link('削除', [
-                'controller' => 'reports', 
-                'action' => 'delete_share', 
-                $share['id']], 
-                ['class' => 'button','glyphicon', 'glyphicon-pencil']); ?>
-            </span></div>
-        <?php
-            echo $this->Form->input('Share.' . $sc . '.id', array('type' => 'hidden','value' => $share['id']));
-            echo $this->Form->input('Share.' . $sc . '.content', [
-                    'rows' => '3',
-                    'label' => false,
-                    'value' => $share["content"],
-                    'class' => 'textarea']);        
-        endforeach; 
-    endif; ?>
-    <div id="share" value="<?= h($sc) ?>"></div>
-    <button id="add_share" class="button addbutton" type="button">気づき・共有追加</button>
-    <?php if (isset($report)) :
-        $btname ='更新';
-    else:
-        $btname ='作成';
-    endif;
+        if (isset($report)) :
+            $btname ='更新';
+            $sharecontent = $report['Share'][0]['content'];
+            $share_id = $report['Share'][0]['id'];
+        else:
+            $sharecontent = "";
+            $share_id = 0;
+            $btname ='作成';
+        endif;
+
+        echo $this->Form->input('Share.0.id', array('type' => 'hidden','value' => $share_id));
+        echo $this->Form->input('Share.0.content', [
+                'rows' => '3',
+                'label' => false,
+                'value' => $sharecontent,
+                'class' => 'textarea']);
         echo $this->Form->button($btname , [
                 'type' => 'submit',
                 'escape' => true,

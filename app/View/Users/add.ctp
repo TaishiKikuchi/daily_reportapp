@@ -20,7 +20,7 @@
             'class' => 'form-control'
         ]);
         echo $this->Form->input('trello_id', ['class' => 'form-control', 'placeholder' => 'trelloのユーザid', 'type' => 'text']);
-        echo $this->Form->input('email', ['class' => 'form-control', 'placeholder' => '取得したいgoogleカレンダーのメールアドレス']);
+        echo $this->Form->input('email', ['class' => 'form-control', 'placeholder' => '取得したいgoogleカレンダーのメールアドレス', 'type' => 'email']);
     ?>
     </fieldset>
     
