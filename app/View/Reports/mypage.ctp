@@ -24,9 +24,11 @@
     ]);
     
     $wc = 0;
+    $sc = 0;
     if (isset($report)) :
         foreach ($report['Work'] as $work):
-            $wc++; ?>
+            $wc++;
+            $sc++; ?>
             <div>作業内容: <span> 
             <?php
             echo $this->Html->link('削除', [
@@ -41,7 +43,14 @@
                     'label' => false,
                     'value' => $work['subject'],
                     'class' => 'textarea']); ?>
-        <?php endforeach; 
+            <div>振り返り<span></span></div>
+            <?php
+            echo $this->Form->input('Work.' . $wc . '.content', [
+                    'rows' => '2',
+                    'label' => false,
+                    'value' => $work["content"],
+                    'class' => 'textarea']);        
+        endforeach; 
     endif ?>
     <div id="work" value="<?= h($wc) ?>"></div>
     <button id="add_work" class="button addbutton" type="button" value="">作業内容追加</button>
@@ -50,7 +59,7 @@
     if (isset($report)) :
         foreach ($report['Share'] as $share):
             $sc++; ?>
-            <div>気づき・共有<span>
+            <div>全体の振り返り<span>
         <?php
             echo $this->Html->link('削除', [
                 'controller' => 'reports', 

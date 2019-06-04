@@ -103,19 +103,18 @@ class ReportsController extends AppController
         //ここから reportテキストをフォーマットに合わせて作る
         $title = $post['Report']['title'] . "\n";
         $workcontent = "【作業内容】\n";
-        $timecontent = "【作業時間】\n";
         $sharecontent = "【気づき・共有】\n";
         foreach ($post['Work'] as $value) :
-            $workcontent = $workcontent . " ・" . $value['subject'] . "\n" ;
-            $timecontent = $timecontent . " ・" . $value['starttime']['hour'] . ":" . $value['starttime']['min'] . "~" . " " .
-            $value['subject'] . "\n";
+            $workcontent = $workcontent . " ・" . $value['subject'] . "\n" . "   ->" .$value['content'] . "\n";
         endforeach;
 
-        foreach ($post['Share'] as $value) :
-            $sharecontent = $sharecontent . $value['content'] . "\n" ;
-        endforeach;
+        if ($post['Share'] != null) :
+            foreach ($post['Share'] as $value) :
+                $sharecontent = $sharecontent . $value['content'] . "\n" ;
+            endforeach;
+        endif;
 
-        $content = $title . "\n" . $workcontent . "\n" . $timecontent . "\n" . $sharecontent;
+        $content = $title . "\n" . $workcontent . "\n" . $sharecontent;
         //ここまで
         $request = ['header' => [
                     'X-ChatWorkToken' => CHATWORKTOKEN,
@@ -250,23 +249,6 @@ class ReportsController extends AppController
         parent::beforeFilter();
         $this->Auth->allow('index', 'logout');
     }
-/*
-    public function create_work($id)
-    {
-        $data = ['Work' => [
-                        'report_id' => $id,
-                        'created' => date("Y/m/d H:i")
-        ]];
-
-        $this->Report->Work->create();
-        if ($this->Report->Work->save($data)) {
-            $this->Session->setFlash(__(date("Y/m/d H:i") . '追加できました'));
-        } else {
-            $this->Session->setFlash(__('追加できませんでした'));
-        }
-        return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
-    }
-*/
 
     public function delete_work($id)
     {
@@ -277,23 +259,7 @@ class ReportsController extends AppController
         }
         return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
     }
-/*
-    public function create_share($id)
-    {
-        $data = ['Share' => [
-                        'report_id' => $id,
-                        'created' => date("Y/m/d H:i")
-        ]];
 
-        $this->Report->Share->create();
-        if ($this->Report->Share->save($data)) {
-            $this->Session->setFlash(__(date("Y/m/d H:i")   . '追加できました'));
-        } else {
-            $this->Session->setFlash(__('追加できませんでした'));
-        }
-        return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
-    }
-*/
     public function delete_share($id)
     {
         if ($this->Report->Share->delete($id)) {

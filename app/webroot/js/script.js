@@ -24,7 +24,10 @@ const addWorkForm = (work="") => {
     addworkblock.insertAdjacentHTML('beforeend',
     '<div id="work_'+ id +'"><div>作業内容: <span><button type="button" class="delbutton button" onclick="delWorkForm('+ id +')">削除</button></span></div>' +
     '<div class="inputtext">' +
-    '<input name="data[Work]['+ id +'][subject]" class="textarea" maxlength="100" type="text" id="Work'+ id +'Subject" value="'+ work +'"></div></div>');
+    '<input name="data[Work]['+ id +'][subject]" class="textarea" maxlength="100" type="text" id="Work'+ id +'Subject" value="'+ work +'">' +
+    '</div>' + 
+    '<div>振り返り<span></span></div><div class="input textarea"><textarea name="data[Work]['+ id +'][content]" rows="2" class="textarea" cols="30" id="Work'+ id +'Content"></textarea></div>' +
+    '</div>');
 
     document.getElementById('work').setAttribute('value', id);
 }
