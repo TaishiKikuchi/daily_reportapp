@@ -300,7 +300,7 @@ class ReportsController extends AppController
 
         // Google API Client
         $client = new Google_Client();
-        $client->setAuthConfig(AUTHCRE);
+        $client->setAuthConfig($oauth_credentials);
         $client->setRedirectUri($redirect_uri);
         $client->addScope(Google_Service_Calendar::CALENDAR);
         $client->setAccessType("offline");   // トークンの自動リフレッシュ
@@ -347,8 +347,6 @@ class ReportsController extends AppController
             $data = ['content' => $value['summary'], 'starttime' => $value['start']['dateTime'], 'endtime' => $value['end']['dateTime']];
             $schedules[] = $data;
         endforeach;
-        $this->log($schedules, LOG_DEBUG);
-        
         return json_encode($schedules);
     }
 }

@@ -63,23 +63,29 @@ const getCardName = async(user_id) => {
             fields: "data,date",
             since: date.getFullYear() + '-' + month + '-' + day + 'T00:00Z'
         });
-
+    console.log(response);
     let subjects = [];
-
+    //除外試し用
+    //console.log(response);
+    const tlist = "z2nnPe9A";
     response.forEach((result) => {
-        if (result['data']['card']) {
-            subjects.push(result['data']['card']['name']);
+        if (result['data']['board']['shortLink'] == tlist) {
+        } else {
+            if (result['data']['card']) {
+                subjects.push(result['data']['card']['name']);
+            }
         }
     });
 
     subjects = new Set(subjects);
-    if(subjects.length == 0) {
+    if(subjects.length != 0) {
+        subjects.forEach((value) => {
+            addWorkForm(value);
+        });
+    } else {
         alert('取得できる作業内容がありません');
     }
-    console.log(subjects);
-    subjects.forEach((value) => {
-        addWorkForm(value);
-    });
+    
 }
     /* async使ってみたバージョン
     const createForm = async () => {
@@ -107,10 +113,14 @@ const getCalendar = (email) => {
     request.addEventListener("load", (event) => {
         let works = JSON.parse(event.target.responseText);
         console.log(works);
-        works.forEach((element) => {
-            console.log(element['content']);
-            addWorkForm(element['content']);
-        });
+        if(works.length != 0) { 
+            works.forEach((element) => {
+                console.log(element['content']);
+                addWorkForm(element['content']);
+            });
+        } else {
+            alert('取得できる内容がありません');
+        }
     });
     request.send();
 }

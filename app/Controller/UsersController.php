@@ -34,7 +34,12 @@ class UsersController extends AppController
                 $this->User->create();
                 if ($this->User->save($this->request->data)) {
                     $this->Session->setFlash(__('The user has been saved'));
-                    return $this->redirect(array('controller' => 'users', 'action' => 'login'));
+                    if ($this->Auth->login()) {
+                        $this->redirect($this->Auth->redirect(['controller' => 'reports','action' => 'mypage']));
+                    } else {
+                        $this->Session->setFlash(__('Invalid username or password, try again'));
+                    }
+                    //return $this->redirect(array('controller' => 'users', 'action' => 'login'));
                 }
                 $this->Session->setFlash(
                     __('The user could not be saved. Please, try again.')
