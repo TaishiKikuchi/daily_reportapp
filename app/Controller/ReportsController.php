@@ -99,7 +99,9 @@ class ReportsController extends AppController
 
     public function chwrite($post)
     {
-        $room_id = "hogehoge";
+        $this->loadModel('User');
+        $user = $this->User->find();
+        $room_id = $user['Department']['cwroom_id'];
         //ここから reportテキストをフォーマットに合わせて作る
         $title = $post['Report']['title'] . "\n";
         $workcontent = "【作業内容】\n";
@@ -121,7 +123,7 @@ class ReportsController extends AppController
                     'Content-Type' => 'application/x-www-form-urlencoded'],
                     'body' => ['body' => $content]
         ];
-        $url = "https://api.chatwork.com/v2/rooms/". CHATWORKROOMID ."/messages";
+        $url = "https://api.chatwork.com/v2/rooms/". $room_id ."/messages";
 
         $data = [];
 

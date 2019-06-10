@@ -44,24 +44,24 @@
             <div>作業内容: <span> 
             <?php
             echo $this->Html->link('削除', [
-                    'controller' => 'reports', 
-                    'action' => 'delete_work', 
-                    $work['id']], 
+                'controller' => 'reports', 
+                'action' => 'delete_work', 
+                $work['id']], 
                 ['class' => 'button']); ?>
             </span></div>
             <?php
             echo $this->Form->input('Work.' . $wc . '.id', ['type' => 'hidden','value' => $work['id']]);
             echo $this->Form->input('Work.' . $wc . '.subject', [
-                    'label' => false,
-                    'value' => $work['subject'],
-                    'class' => 'textarea']); ?>
+                'label' => false,
+                'value' => $work['subject'],
+                'class' => 'textarea']); ?>
             <div>振り返り<span></span></div>
             <?php
             echo $this->Form->input('Work.' . $wc . '.content', [
-                    'rows' => '2',
-                    'label' => false,
-                    'value' => $work["content"],
-                    'class' => 'textarea']);        
+                'rows' => '2',
+                'label' => false,
+                'value' => $work["content"],
+                'class' => 'textarea']);        
         endforeach; 
     endif ?>
         <div id="work" value="<?= h($wc) ?>"></div>
@@ -80,22 +80,29 @@
 
         echo $this->Form->input('Share.0.id', array('type' => 'hidden','value' => $share_id));
         echo $this->Form->input('Share.0.content', [
-                'rows' => '3',
-                'label' => false,
-                'value' => $sharecontent,
-                'class' => 'textarea']);
+            'rows' => '3',
+            'label' => false,
+            'value' => $sharecontent,
+            'class' => 'textarea']);
         echo $this->Form->button($btname , [
-                'type' => 'submit',
-                'escape' => true,
-                'class' => ['button', 'postbutton']]);
+            'type' => 'submit',
+            'escape' => true,
+            'class' => ['button', 'postbutton']]);
         echo $this->Form->end(); ?>
     </div>
     <div class="show_share">
     <h2>みんなの共有・気づき</h2>
     <?php foreach ($shares as $share): ?>
-                <p><?= h($share['Share']['content']); ?></p>
-    <?php endforeach; 
+        <p><?= h($share['Share']['content']); ?></p>
+    <?php endforeach;
     echo $this->Html->script('script');
     ?>
+    </div>
+
+    <div class="trello_ex_list">
+    <?php
+        echo $this->Form->create('trello_list');
+        //echo $this->input();
+        echo $this->Form->end(); ?>
     </div>
 </div>
