@@ -53,7 +53,7 @@ window.Trello.authorize({
     error: authenticationFailure
 });
 
-const getCardName = async(user_id) => {
+const getCardName = async(user_id, trello_ex_list) => {
     let date = new Date();
     date.setTime(date.getTime() - 1000*60*60*9);
     const month = ("0"+(date.getMonth() + 1)).slice(-2);
@@ -63,10 +63,10 @@ const getCardName = async(user_id) => {
             fields: "data,date",
             since: date.getFullYear() + '-' + month + '-' + day + 'T00:00Z'
         });
-    console.log(response);
+        
     let subjects = [];
     //除外試し用
-    //console.log(response);
+    console.log(trello_ex_list);
     const tlist = "z2nnPe9A";
     response.forEach((result) => {
         if (result['data']['board']['shortLink'] == tlist) {

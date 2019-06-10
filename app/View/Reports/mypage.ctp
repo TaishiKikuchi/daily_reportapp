@@ -13,10 +13,10 @@
         'class' => ['button', 'postbutton']]);
     echo $this->Form->end(); */
     ?>
-<button type="button" class="button getbutton" onclick="getCardName('<?= h($trello_id) ?>')">Trello読み込み</button>
+<button type="button" class="button getbutton" onclick="getCardName('<?= h($trello_id)?>')">Trello読み込み</button>
 <button type="button" class="button getbutton" onclick="getCalendar('<?= h($email) ?>')">カレンダー読み込み</button>
 
-<div class="container"> 
+<div class="container">
     <div class="report_form">
 <?php
     echo $this->Form->create('Report');
@@ -90,19 +90,41 @@
             'class' => ['button', 'postbutton']]);
         echo $this->Form->end(); ?>
     </div>
+    <!--
     <div class="show_share">
     <h2>みんなの共有・気づき</h2>
     <?php foreach ($shares as $share): ?>
         <p><?= h($share['Share']['content']); ?></p>
-    <?php endforeach;
-    echo $this->Html->script('script');
-    ?>
+    <?php endforeach; ?>
     </div>
+    -->
 
     <div class="trello_ex_list">
     <?php
-        echo $this->Form->create('trello_list');
-        //echo $this->input();
-        echo $this->Form->end(); ?>
+    echo $this->Html->script('script');
+    $exc = 0;
+    if (isset($trello_ex_list)) :
+        echo $this->Form->create('Trello_exclusion_list', array('action' => 'addTrelloExList'));
+        echo $this->Form->input('user_id', [
+            'type' => 'hidden',
+            'value' => $auth['id']
+        ]);
+        foreach ($trello_ex_list as $list):
+            $exc++;
+            echo $this->Form->input('id', ['type' => 'hidden','value' => $list['id']]);
+            echo $this->Form->input('trello_id', [
+                'label' => false,
+                'value' => $list['trello_id'],
+                'class' => 'textarea',
+                'type' => 'text'
+                ]);
+            echo $this->Form->input('state', ['type' => 'hidden','value' => 0]);
+        endforeach;
+        echo $this->Form->button("追加" , [
+            'type' => 'submit',
+            'escape' => true,
+            'class' => ['button', 'postbutton']]);
+        echo $this->Form->end();
+    endif; ?>
     </div>
 </div>

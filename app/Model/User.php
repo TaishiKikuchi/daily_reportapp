@@ -32,6 +32,7 @@ class User extends AppModel
             )
         )
     );
+    
     var $primaryKey = 'departmentcode';
 
     public $hasOne = array(

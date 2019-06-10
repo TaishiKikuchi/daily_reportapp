@@ -58,6 +58,7 @@ class ReportsController extends AppController
     {
         $this->getGoogleClientToken();
         $this->loadModel('User');
+        $this->loadModel('Trello_exclusion_list');
         if ($this->request->is('post')) {
             if ($this->Report->saveAssociated($this->request->data, ['deep' => true])) {
                 $this->Session->setFlash(__('Your post has been saved.'));
@@ -90,7 +91,10 @@ class ReportsController extends AppController
                 'limit' => 20
         ]));
 
+        $trello_list = $this->Trello_exclusion_list->findByUserId($user_id);
         $task = $this->User->findById($user_id);
+        $this->log($trello_list, LOG_DEBUG);
+        $this->set('trello_ex_list', $trello_list);
         $this->set('trello_id', $task['User']['trello_id']);
         $this->set('email', $task['User']['email']);
 
@@ -100,7 +104,8 @@ class ReportsController extends AppController
     public function chwrite($post)
     {
         $this->loadModel('User');
-        $user = $this->User->find();
+        $user_id = $post['Report']['user_id'];
+        $user = $this->User->findById($user_id);
         $room_id = $user['Department']['cwroom_id'];
         //ここから reportテキストをフォーマットに合わせて作る
         $title = $post['Report']['title'] . "\n";
