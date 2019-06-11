@@ -114,11 +114,11 @@ class ReportsController extends AppController
             $workcontent = $workcontent . " ・" . $value['subject'] . "\n" . "   ->" .$value['content'] . "\n";
         endforeach;
 
-        if ($post['Share'] != null) {
+        if ($post['Share'] != null) :
             foreach ($post['Share'] as $value) :
                 $sharecontent = $sharecontent . $value['content'] . "\n" ;
             endforeach;
-        }
+        endif;
 
         $content = $title . "\n" . $workcontent . "\n" . $sharecontent;
         //ここまで
@@ -128,10 +128,7 @@ class ReportsController extends AppController
             'body' => ['body' => $content]
         ];
         $url = "https://api.chatwork.com/v2/rooms/". $room_id ."/messages";
-
-
         $data = [];
-
         $report = $this->Report->findById($post['Report']['id']);
         $HttpSocket = new HttpSocket();
         if (!$report || $report['Report']['message_id'] == null) :
@@ -140,12 +137,7 @@ class ReportsController extends AppController
             $url = "https://api.chatwork.com/v2/rooms/". $room_id ."/messages" . "/" . $report['Report']['message_id'];
             $response = $HttpSocket->put($url, $data, $request);
         endif;
-        $this->log($post, LOG_DEBUG);
-        $this->log($url, LOG_DEBUG);
 
-        /*$this->log($url, LOG_DEBUG);
-        $this->log($content, LOG_DEBUG);
-        $this->log($report, LOG_DEBUG); */
         if ($response->code != 200) :
             return $this->Session->setFlash('Your post has been saved. but chatworkに投稿できませんでした');
         endif;
@@ -291,7 +283,6 @@ class ReportsController extends AppController
                         'title' => date("m/d") . $user['User']['username'] . "'日報",
                         'created' => date("Y/m/d H:i")
             ]];
-
             $this->Report->create();
             $this->Report->save($data);
         endforeach;

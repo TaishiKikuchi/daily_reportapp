@@ -53,7 +53,7 @@ window.Trello.authorize({
     error: authenticationFailure
 });
 
-const getCardName = async(user_id, trello_ex_list) => {
+const getCardName = async(user_id) => {
     let date = new Date();
     date.setTime(date.getTime() - 1000*60*60*9);
     const month = ("0"+(date.getMonth() + 1)).slice(-2);
@@ -66,18 +66,23 @@ const getCardName = async(user_id, trello_ex_list) => {
 
     let subjects = [];
     //除外試し用
-    const exlist = document.getElementById('Trello_exclusion_listTrelloId').value;
-    console.log(exlist);
-    const tlist = ['z2nnPe9A','VfRDLobM'];
+    const exlists = document.getElementById('Trello_exclusion_listTrelloId').value.split(",");
+    console.log(exlists);
+    //除外リスト処理
     response.forEach((result) => {
-        if ((result['data']['board']['shortLink'] == tlist[0]) || (result['data']['board']['shortLink'] == tlist[1])) {
-        } else {
-            if (result['data']['card']) {
-                subjects.push(result['data']['card']['name']);
+        let count = 0;
+        exlists.some((exlist) => {
+            if (result['data']['board']['shortLink'] == exlist) {
+                console.log(result['data']['board']['shortLink']);
+                count++;
+            } else {
             }
+        });
+        if ((result['data']['card']) && (count == 0)) {
+            subjects.push(result['data']['card']['name']);
         }
     });
-
+    //重複削除処理
     subjects = new Set(subjects);
     if(subjects.length != 0) {
         subjects.forEach((value) => {
@@ -87,26 +92,7 @@ const getCardName = async(user_id, trello_ex_list) => {
         alert('取得できる作業内容がありません');
     }
 }
-    /* async使ってみたバージョン
-    const createForm = async () => {
-        await response.forEach((result) => {
-            if (result['data']['card']) {
-                subjects.push(result['data']['card']['name']);
-            }
-        });
 
-        subjects = new Set(subjects);
-        if(subjects.length == 0) {
-            alert('取得できる作業内容がありません');
-            console.log(subjects);
-        }
-
-        subjects.forEach((value) => {
-            addWorkForm(value);
-        });
-    };
-    createForm();
-    */
 const getCalendar = (email) => {
     console.log(email);
     const request = new XMLHttpRequest();

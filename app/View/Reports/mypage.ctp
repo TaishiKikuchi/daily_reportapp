@@ -109,7 +109,7 @@
             'type' => 'hidden',
             'value' => $auth['id']
         ]);
-        echo $this->Form->input('id', ['type' => 'hidden','value' => $list['id']]);
+        echo $this->Form->input('id', ['type' => 'hidden','value' => $list['id'],'disabled' => 'disabled']);
         echo $this->Form->input('trello_id', [
             'label' => false,
             'value' => $list['trello_id'],
@@ -117,7 +117,7 @@
             'type' => 'text'
             ]);
         echo $this->Form->input('state', ['type' => 'hidden','value' => 0]);
-        echo $this->Form->button("追加" , [
+        echo $this->Form->button("除外リスト設定" , [
             'type' => 'submit',
             'escape' => true,
             'class' => ['button', 'postbutton']]);
