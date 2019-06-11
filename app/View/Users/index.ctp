@@ -1,10 +1,10 @@
 <h1>user list</h1>
 <?php
-echo $this->Html->css('cake.generic'); 
+echo $this->Html->css('cake.generic');
  if ($auth) {
  echo 'ログインユーザ' . $auth['username'];
  }
- 
+
 ?>
 <table>
     <tr>
@@ -27,7 +27,7 @@ echo $this->Html->css('cake.generic');
         <td><?php echo $user['User']['departmentcode']; ?></td>
         <td><?php echo $user['User']['task']; ?></td>
         <td><?php echo $this->Html->link('Edit', array('action' => 'edit', $user['User']['id']));
-        echo $this->Form->postLink('delete2', 
+        echo $this->Form->postLink('delete2',
         array('controller' => 'Users', 'action' => 'delete', $user['User']['id']), array('confirm' => '本当に削除しますか?'));
         ?></td>
         <td><?php echo $user['User']['created']; ?></td>

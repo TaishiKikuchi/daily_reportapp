@@ -23,7 +23,7 @@ const addWorkForm = (work="") => {
     '<div id="work_'+ id +'"><div>作業内容: <span><button type="button" class="delbutton button" onclick="delWorkForm('+ id +')">削除</button></span></div>' +
     '<div class="inputtext">' +
     '<input name="data[Work]['+ id +'][subject]" class="textarea" maxlength="100" type="text" id="Work'+ id +'Subject" value="'+ work +'">' +
-    '</div>' + 
+    '</div>' +
     '<div>振り返り<span></span></div><div class="input textarea"><textarea name="data[Work]['+ id +'][content]" rows="2" class="textarea" cols="30" id="Work'+ id +'Content"></textarea></div>' +
     '</div>');
 
@@ -37,7 +37,7 @@ addwork.addEventListener('click', addform);
 const authenticationSuccess = () => {
     console.log('Successful authentication');
 };
-  
+
 const authenticationFailure = () => {
     console.log('Failed authentication');
 };
@@ -63,13 +63,14 @@ const getCardName = async(user_id, trello_ex_list) => {
             fields: "data,date",
             since: date.getFullYear() + '-' + month + '-' + day + 'T00:00Z'
         });
-        
+
     let subjects = [];
     //除外試し用
-    console.log(trello_ex_list);
-    const tlist = "z2nnPe9A";
+    const exlist = document.getElementById('Trello_exclusion_listTrelloId').value;
+    console.log(exlist);
+    const tlist = ['z2nnPe9A','VfRDLobM'];
     response.forEach((result) => {
-        if (result['data']['board']['shortLink'] == tlist) {
+        if ((result['data']['board']['shortLink'] == tlist[0]) || (result['data']['board']['shortLink'] == tlist[1])) {
         } else {
             if (result['data']['card']) {
                 subjects.push(result['data']['card']['name']);
@@ -85,7 +86,6 @@ const getCardName = async(user_id, trello_ex_list) => {
     } else {
         alert('取得できる作業内容がありません');
     }
-    
 }
     /* async使ってみたバージョン
     const createForm = async () => {
@@ -108,12 +108,13 @@ const getCardName = async(user_id, trello_ex_list) => {
     createForm();
     */
 const getCalendar = (email) => {
+    console.log(email);
     const request = new XMLHttpRequest();
     request.open("GET", "http://localhost:8080/daily_reportapp/reports/getSchedules/" + email);
     request.addEventListener("load", (event) => {
         let works = JSON.parse(event.target.responseText);
         console.log(works);
-        if(works.length != 0) { 
+        if(works.length != 0) {
             works.forEach((element) => {
                 console.log(element['content']);
                 addWorkForm(element['content']);

@@ -18,6 +18,6 @@ echo $this->session->flash('auth'); ?>
         'type' => 'submit',
         'escape' => true,
         'class' =>'btn btn-success']);
-    echo $this->Html->link('新規作成', ['class' => 'btn btn-primary', 'action' => 'add']); 
+    echo $this->Html->link('新規作成', ['class' => 'btn btn-primary', 'action' => 'add']);
     echo $this->Form->end(); ?>
 </div>

@@ -35,7 +35,7 @@ class ReportsController extends AppController
         $this->set('subtitle', '日報一覧');
     }
 
-    
+
     public function shareindex()
     {
         $this->Paginator->settings = $this->paginate = [
@@ -59,14 +59,14 @@ class ReportsController extends AppController
         $this->getGoogleClientToken();
         $this->loadModel('User');
         $this->loadModel('Trello_exclusion_list');
-        if ($this->request->is('post')) {
-            if ($this->Report->saveAssociated($this->request->data, ['deep' => true])) {
+        if ($this->request->is('post')) :
+            if ($this->Report->saveAssociated($this->request->data, ['deep' => true])) :
                 $this->Session->setFlash(__('Your post has been saved.'));
                 $this->chwrite($this->request->data);
                 return $this->redirect(['action' => 'mypage']);
-            }
+            endif;
             $this->Session->setFlash(__('Unable to add your post.'));
-        }
+        endif;
         $user_id = $this->Auth->user('id');
 
         //ここの処理はmodel側でやらせるべき？
@@ -80,11 +80,11 @@ class ReportsController extends AppController
             'limit' => 1
         ]);
 
-        if ($report) {
+        if ($report) :
             $this->set('report', $report[0]);
-        } else {
+        else :
             $this->set('report', null);
-        }
+        endif;
         //ここはまあそのままでokのようなきがする
         $this->set('shares', $this->Report->Share->find('all', [
                 'order' => 'Share.created DESC',
@@ -93,7 +93,6 @@ class ReportsController extends AppController
 
         $trello_list = $this->Trello_exclusion_list->findByUserId($user_id);
         $task = $this->User->findById($user_id);
-        $this->log($trello_list, LOG_DEBUG);
         $this->set('trello_ex_list', $trello_list);
         $this->set('trello_id', $task['User']['trello_id']);
         $this->set('email', $task['User']['email']);
@@ -115,34 +114,38 @@ class ReportsController extends AppController
             $workcontent = $workcontent . " ・" . $value['subject'] . "\n" . "   ->" .$value['content'] . "\n";
         endforeach;
 
-        if ($post['Share'] != null) :
+        if ($post['Share'] != null) {
             foreach ($post['Share'] as $value) :
                 $sharecontent = $sharecontent . $value['content'] . "\n" ;
             endforeach;
-        endif;
+        }
 
         $content = $title . "\n" . $workcontent . "\n" . $sharecontent;
         //ここまで
         $request = ['header' => [
-                    'X-ChatWorkToken' => CHATWORKTOKEN,
-                    'Content-Type' => 'application/x-www-form-urlencoded'],
-                    'body' => ['body' => $content]
+            'X-ChatWorkToken' => CHATWORKTOKEN,
+            'Content-Type' => 'application/x-www-form-urlencoded'],
+            'body' => ['body' => $content]
         ];
         $url = "https://api.chatwork.com/v2/rooms/". $room_id ."/messages";
+
 
         $data = [];
 
         $report = $this->Report->findById($post['Report']['id']);
-        //$this->log($report['Report'], LOG_DEBUG);
         $HttpSocket = new HttpSocket();
         if (!$report || $report['Report']['message_id'] == null) :
             $response = $HttpSocket->post($url, $data, $request);
         else :
-            $url = "https://api.chatwork.com/v2/rooms/". CHATWORKROOMID ."/messages" . "/" . $report['Report']['message_id'];
+            $url = "https://api.chatwork.com/v2/rooms/". $room_id ."/messages" . "/" . $report['Report']['message_id'];
             $response = $HttpSocket->put($url, $data, $request);
         endif;
-        $this->log($response, LOG_DEBUG);
+        $this->log($post, LOG_DEBUG);
         $this->log($url, LOG_DEBUG);
+
+        /*$this->log($url, LOG_DEBUG);
+        $this->log($content, LOG_DEBUG);
+        $this->log($report, LOG_DEBUG); */
         if ($response->code != 200) :
             return $this->Session->setFlash('Your post has been saved. but chatworkに投稿できませんでした');
         endif;
@@ -160,94 +163,96 @@ class ReportsController extends AppController
 
     public function view($id = null)
     {
-        if (!$id) {
+        if (!$id) :
             throw new NotFoundException(__('Invalid post'));
-        }
+        endif;
 
         $report = $this->Report->findById($id);
-        if (!$report) {
+        if (!$report) :
             throw new NotFoundException(__('Invalid post'));
-        }
+        endif;
         $this->set('report', $report);
         $this->set('subtitle', '日報詳細');
     }
 
     public function add()
     {
-        if ($this->request->is('post')) {
+        if ($this->request->is('post')) :
             $this->Report->create();
-            if ($this->Report->save($this->request->data)) {
+            if ($this->Report->save($this->request->data)) :
                 $this->Session->setFlash(__('Your post has been saved.'));
                 return $this->redirect(['action' => 'index']);
-            }
+            endif;
             $this->Session->setFlash(__('Unable to add your post.'));
-        }
+        endif;
     }
 
     public function edit($id = null)
     {
-        if (!$id) {
+        if (!$id) :
             throw new NotFoundException(__('Invalid post'));
-        }
-    
+        endif;
+
         $report = $this->Report->findById($id);
-        if (!$report) {
+        if (!$report) :
             throw new NotFoundException(__('Invalid post'));
-        }
-    
-        if ($this->request->is(['post', 'put'])) {
-            if ($this->Report->save($this->request->data)) {
+        endif;
+
+        if ($this->request->is(['post', 'put'])) :
+            if ($this->Report->save($this->request->data)) :
                 $this->Session->setFlash(__('Your post has been updated.'));
                 return $this->redirect(['action' => 'index']);
-            }
+            endif;
             $this->Session->setFlash(__('Unable to update your post.'));
-        }
-    
-        if (!$this->request->data) {
+        endif;
+
+        if (!$this->request->data) :
             $this->request->data = $report;
-        }
+        endif;
     }
 
     public function delete($id)
     {
-        if ($this->request->is('get')) {
+        if ($this->request->is('get')) :
             throw new MethodNotAllowedException();
-        }
-    
-        if ($this->Report->delete($id)) {
+        endif;
+
+        if ($this->Report->delete($id)) :
             $this->Session->setFlash(
                 __('The post with id: %s has been deleted.', h($id))
             );
-        } else {
+        else :
             $this->Session->setFlash(
                 __('The post with id: %s could not be deleted.', h($id))
             );
-        }
-    
+        endif;
+
         return $this->redirect(['action' => 'index']);
     }
 
     public function isAuthorized($user)
     {
         // 登録済ユーザーは投稿できる
-        if ($this->action === 'add') {
+        if ($this->action === 'add') :
             return true;
-        }
-        if ($this->action === 'index') {
+        endif;
+
+        if ($this->action === 'index') :
             //$this->autoLayout = false;  // レイアウトをOFFにする
             return true;
-        }
-        if ($this->action === 'view') {
+        endif;
+
+        if ($this->action === 'view') :
             return true;
-        }
+        endif;
         // 投稿のオーナーは編集や削除ができる
-        if (in_array($this->action, ['edit', 'delete'])) {
+        if (in_array($this->action, ['edit', 'delete'])) :
             $reportId = (int) $this->request->params['pass'][0];
-            if ($this->Report->isOwnedBy($reportId, $user['id'])) {
+            if ($this->Report->isOwnedBy($reportId, $user['id'])) :
                 return true;
-            }
-        }
-    
+            endif;
+        endif;
+
         return parent::isAuthorized($user);
     }
 
@@ -259,21 +264,21 @@ class ReportsController extends AppController
 
     public function delete_work($id)
     {
-        if ($this->Report->Work->delete($id)) {
+        if ($this->Report->Work->delete($id)) :
             $this->Session->setFlash(__('削除できました'));
-        } else {
+        else :
             $this->Session->setFlash(__('削除できませんでした'));
-        }
+        endif;
         return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
     }
 
     public function delete_share($id)
     {
-        if ($this->Report->Share->delete($id)) {
+        if ($this->Report->Share->delete($id)) :
             $this->Session->setFlash(__('削除できました'));
-        } else {
+        else :
             $this->Session->setFlash(__('削除できませんでした'));
-        }
+        endif;
         return $this->redirect(['controller' => 'reports', 'action' => 'mypage']);
     }
 
@@ -292,13 +297,13 @@ class ReportsController extends AppController
         endforeach;
     }
 
-  
+
     public function getGoogleClientToken()
     {
         // パスが通っていなければ設定
         $path = '/daily_reportapp/app/Vendor/google-api-php-client/src';
         set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-     
+
         // OAuthクライアント認証用のJSONファイル
         $oauth_credentials = AUTHCRE;  // 上記でダウンロードしたJSONファイルのPATH
 
@@ -313,22 +318,22 @@ class ReportsController extends AppController
         $client->setAccessType("offline");   // トークンの自動リフレッシュ
         $client->setApprovalPrompt("force"); // これがないと初回以外はリフレッシュトークンが得られない
         $authUrl = $client->createAuthUrl();
-        
+
         // 認証後codeを受け取ったらセッション保存
-        if (isset($this->request->query['code'])) {
+        if (isset($this->request->query['code'])) :
             $client->authenticate($this->request->query['code']);
             $this->Session->write('token', $client->getAccessToken());
             $this->redirect('http://' . $_SERVER['HTTP_HOST'] . '/daily_reportapp/reports/mypage');
-        }
-     
-        if ($this->Session->check('token')) {
+        endif;
+
+        if ($this->Session->check('token')) :
             $client->setAccessToken($this->Session->read('token'));
-        }
-             
-        if (!$client->getAccessToken()) {
+        endif;
+
+        if (!$client->getAccessToken()) :
             $auth_url = $client->createAuthUrl();
             echo '<a href="'.$auth_url.'">認証</a>';
-        }
+        endif;
         return 0;
     }
 

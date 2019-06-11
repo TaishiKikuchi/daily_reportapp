@@ -1,6 +1,6 @@
 <?php
     echo $this->Html->css('mypage_style');
-    echo $this->element('header'); 
+    echo $this->element('header');
     /* trello除外リスト作成途中
     echo $this->Form->create('exlists');
     echo $this->Form->input('user_id', [
@@ -21,7 +21,7 @@
 <?php
     echo $this->Form->create('Report');
     echo $this->Form->input('title', [
-        'default' => date("m/d") . $auth['username'] . "'日報", 
+        'default' => date("m/d") . $auth['username'] . "'日報",
         'div' => false,
         'class' => 'reporttitle',
         'label' => false
@@ -31,22 +31,22 @@
         'value' => $auth['id']
     ]);
     echo $this->Form->input('id', [
-        'type' => 'hidden', 
+        'type' => 'hidden',
         'value' => $report['Report']['id']
     ]);
-    
+
     $wc = 0;
     $sc = 0;
     if (isset($report)) :
         foreach ($report['Work'] as $work):
             $wc++;
             $sc++; ?>
-            <div>作業内容: <span> 
+            <div>作業内容: <span>
             <?php
             echo $this->Html->link('削除', [
-                'controller' => 'reports', 
-                'action' => 'delete_work', 
-                $work['id']], 
+                'controller' => 'reports',
+                'action' => 'delete_work',
+                $work['id']],
                 ['class' => 'button']); ?>
             </span></div>
             <?php
@@ -61,8 +61,8 @@
                 'rows' => '2',
                 'label' => false,
                 'value' => $work["content"],
-                'class' => 'textarea']);        
-        endforeach; 
+                'class' => 'textarea']);
+        endforeach;
     endif ?>
         <div id="work" value="<?= h($wc) ?>"></div>
         <button id="add_work" class="button addbutton" type="button" value="">作業内容追加</button>
@@ -102,24 +102,21 @@
     <div class="trello_ex_list">
     <?php
     echo $this->Html->script('script');
-    $exc = 0;
     if (isset($trello_ex_list)) :
+        $list = $trello_ex_list['Trello_exclusion_list'];
         echo $this->Form->create('Trello_exclusion_list', array('action' => 'addTrelloExList'));
         echo $this->Form->input('user_id', [
             'type' => 'hidden',
             'value' => $auth['id']
         ]);
-        foreach ($trello_ex_list as $list):
-            $exc++;
-            echo $this->Form->input('id', ['type' => 'hidden','value' => $list['id']]);
-            echo $this->Form->input('trello_id', [
-                'label' => false,
-                'value' => $list['trello_id'],
-                'class' => 'textarea',
-                'type' => 'text'
-                ]);
-            echo $this->Form->input('state', ['type' => 'hidden','value' => 0]);
-        endforeach;
+        echo $this->Form->input('id', ['type' => 'hidden','value' => $list['id']]);
+        echo $this->Form->input('trello_id', [
+            'label' => false,
+            'value' => $list['trello_id'],
+            'class' => 'textarea',
+            'type' => 'text'
+            ]);
+        echo $this->Form->input('state', ['type' => 'hidden','value' => 0]);
         echo $this->Form->button("追加" , [
             'type' => 'submit',
             'escape' => true,

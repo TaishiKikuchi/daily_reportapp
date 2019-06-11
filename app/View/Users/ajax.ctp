@@ -26,9 +26,3 @@ if ('POST' == $_SERVER['REQUEST_METHOD'] && isset($_SERVER['HTTP_X_TRELLO_WEBHOO
         var_dump($json);
     }
 }
-
-
-
-
-
-

@@ -4,12 +4,12 @@
     echo $this->Form->create('Report');
     echo $this->Form->input('部署選択', array(
         'options' => array(
-            '1' => 'セールスマーケティング部', 
-            '2' => 'CRM戦略推進部', 
-            '3' => 'CRMマネジメントサービス', 
-            '4' => '開発部', 
-            '5' => '管理部', 
-            '6' => 'CRM協会', 
+            '1' => 'セールスマーケティング部',
+            '2' => 'CRM戦略推進部',
+            '3' => 'CRMマネジメントサービス',
+            '4' => '開発部',
+            '5' => '管理部',
+            '6' => 'CRM協会',
             '7' => 'all'),
         'onchange'=>'this.form.submit()',
         'name' => 'code',
