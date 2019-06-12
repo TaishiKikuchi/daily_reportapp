@@ -16,6 +16,14 @@ const addform = () => {
     addWorkForm();
 }
 
+//隠れているウィンドウを表示させる関数
+const addSettingWindow = () => {
+    let obj = document.getElementById('trello_ex_list_off');
+    let obj2 = document.getElementById('modal_overlay');
+    obj.id = "trello_ex_list_on";
+    obj2.id = "modal_overlay_on";
+}
+
 const addWorkForm = (work="") => {
     //今のままだとaddform二回以上押されると最初か最後のフォームの入力した有効にならない!!! idの数字がボタン押されるごとに増える必要あり
     let id = parseInt(addworkblock.getAttribute('value')) + 1;

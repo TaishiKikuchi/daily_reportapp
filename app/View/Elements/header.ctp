@@ -10,7 +10,7 @@
         echo $this->Html->link('新規登録', array('controller' => 'users','action' => 'add', 'class' => 'usermanager'));
     endif; ?>
     </div>
-    
+
     <h1 class="title">日報作成app</h1>
     <h3 class="subtitle">~ <?= h($subtitle) ?> ~</h3>
     <nav>

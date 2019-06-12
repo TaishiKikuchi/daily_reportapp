@@ -15,7 +15,7 @@
     ?>
 <button type="button" class="button getbutton" onclick="getCardName('<?= h($trello_id)?>')">Trello読み込み</button>
 <button type="button" class="button getbutton" onclick="getCalendar('<?= h($email) ?>')">カレンダー読み込み</button>
-
+<button type="button" class="trellosetting" onclick="addSettingWindow()">trello除外設定</button>
 <div class="container">
     <div class="report_form">
 <?php
@@ -99,7 +99,7 @@
     </div>
     -->
 
-    <div class="trello_ex_list">
+    <div id="trello_ex_list_off">
     <?php
     echo $this->Html->script('script');
     if (isset($trello_ex_list)) :
@@ -109,7 +109,7 @@
             'type' => 'hidden',
             'value' => $auth['id']
         ]);
-        echo $this->Form->input('id', ['type' => 'hidden','value' => $list['id'],'disabled' => 'disabled']);
+        echo $this->Form->input('id', ['type' => 'hidden','value' => $list['id']]);
         echo $this->Form->input('trello_id', [
             'label' => false,
             'value' => $list['trello_id'],
@@ -124,4 +124,5 @@
         echo $this->Form->end();
     endif; ?>
     </div>
+    <div id="modal_overlay" ></div>
 </div>
