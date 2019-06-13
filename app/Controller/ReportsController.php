@@ -299,7 +299,8 @@ class ReportsController extends AppController
         $oauth_credentials = AUTHCRE;  // 上記でダウンロードしたJSONファイルのPATH
 
         // Google認証後のリダイレクト先（「http://localhost/test/google-calendar/?code=アクセストークン」 という形でリダイレクトされる）
-        $redirect_uri = "http://localhost:8080/daily_reportapp/reports/mypage";
+        //$redirect_uri = "http://localhost:8080/daily_reportapp/reports/mypage";
+        $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/daily_reportapp/reports/mypage';
 
         // Google API Client
         $client = new Google_Client();
