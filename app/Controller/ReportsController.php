@@ -324,9 +324,8 @@ class ReportsController extends AppController
 
         if (!$client->getAccessToken()) :
             $auth_url = $client->createAuthUrl();
-            echo '<a href="'.$auth_url.'">認証</a>';
+            echo '<a href="'.$auth_url.'">googleカレンダー認証</a>';
         endif;
-        return 0;
     }
 
     public function getSchedules($mail)

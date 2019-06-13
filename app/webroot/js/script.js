@@ -19,9 +19,22 @@ const addform = () => {
 //隠れているウィンドウを表示させる関数
 const addSettingWindow = () => {
     let obj = document.getElementById('trello_ex_list_off');
-    let obj2 = document.getElementById('modal_overlay');
     obj.id = "trello_ex_list_on";
-    obj2.id = "modal_overlay_on";
+    $("body").append( '<div id="modal-overlay"></div>');
+    $("#modal-overlay").fadeIn("slow");
+    $("#trello_ex_list_on").fadeIn("slow");
+
+
+    $("#modal-overlay,#modal-close").unbind().click( function(){
+		//[#modal-content]と[#modal-overlay]をフェードアウトした後に…
+		$("#modal-content,#modal-overlay" ).fadeOut("slow", () => {
+			//[#modal-overlay]を削除する
+			$('#modal-overlay').remove() ;
+        });
+
+        let obj = document.getElementById('trello_ex_list_on');
+        obj.id = "trello_ex_list_off";
+	});
 }
 
 const addWorkForm = (work="") => {
@@ -104,7 +117,7 @@ const getCardName = async(user_id) => {
 const getCalendar = (email) => {
     console.log(email);
     const request = new XMLHttpRequest();
-    request.open("GET", "http://" + location.hostname + "/daily_reportapp/reports/getSchedules/" + email);
+    request.open("GET", "http://" + location.hostname + ":8080/daily_reportapp/reports/getSchedules/" + email);
     request.addEventListener("load", (event) => {
         let works = JSON.parse(event.target.responseText);
         console.log(works);
