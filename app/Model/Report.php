@@ -16,7 +16,7 @@ class Report extends AppModel
             'className' => 'Share'
         )
     );
-    
+
     public $belongsTo = array(
         'User' => array(
             'className' => 'User',

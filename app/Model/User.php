@@ -32,7 +32,7 @@ class User extends AppModel
             )
         )
     );
-    
+    /*
     var $primaryKey = 'departmentcode';
 
     public $hasOne = array(
@@ -41,6 +41,7 @@ class User extends AppModel
             'foreignKey' => 'department_id'
         )
     );
+    */
 
     public function beforeSave($options = array())
     {

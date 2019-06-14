@@ -102,10 +102,12 @@ class ReportsController extends AppController
 
     public function chwrite($post)
     {
-        $this->loadModel('User');
+        $this->loadModel('Department');
         $user_id = $post['Report']['user_id'];
-        $user = $this->User->findById($user_id);
-        $room_id = $user['Department']['cwroom_id'];
+        $user = $this->User->read('departmentcode', $id = $user_id);
+        $department = $this->Department->findByDepartmentId($user['User']['departmentcode']);
+        $room_id = $department['Department']['cwroom_id'];
+
         //ここから reportテキストをフォーマットに合わせて作る
         $title = $post['Report']['title'] . "\n";
         $workcontent = "【作業内容】\n";
