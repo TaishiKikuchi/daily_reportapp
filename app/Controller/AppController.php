@@ -53,13 +53,14 @@ class AppController extends Controller {
             'authorize' => array('Controller')
         )
     );
- 
+
     public function isAuthorized($user) {
         // 管理者判別用 今回はまだ作ってないのでログインできてたら全ページアクセス可
         if (isset($user['departmentcode']) && $user['departmentcode'] != '10') {
-            return true;
+            if ($this->action === 'mypage') :
+                return true;
+            endif;
         }
-    
         // デフォルトは拒否
         return false;
     }

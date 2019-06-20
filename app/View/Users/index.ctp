@@ -25,7 +25,7 @@ echo $this->Html->css('cake.generic');
             <?php echo $user['User']['username']; ?>
         </td>
         <td><?php echo $user['User']['departmentcode']; ?></td>
-        <td><?php echo $user['User']['task']; ?></td>
+        <td><?php echo $user['User']['trello_id']; ?></td>
         <td><?php echo $this->Html->link('Edit', array('action' => 'edit', $user['User']['id']));
         echo $this->Form->postLink('delete2',
         array('controller' => 'Users', 'action' => 'delete', $user['User']['id']), array('confirm' => '本当に削除しますか?'));

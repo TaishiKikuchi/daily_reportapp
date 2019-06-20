@@ -8,8 +8,8 @@ class UsersController extends AppController
 
     public function beforeFilter()
     {
+        $this->Auth->allow('logout', 'add', 'login');
         parent::beforeFilter();
-        $this->Auth->allow('logout', 'add');
     }
 
     public function index()
@@ -61,7 +61,7 @@ class UsersController extends AppController
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('The user has been saved'));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['controller' => 'Reports','action' => 'mypage']);
             }
             $this->Session->setFlash(
                 __('The user could not be saved. Please, try again.')
@@ -122,5 +122,24 @@ class UsersController extends AppController
             $users = $this->User->find('all');
         }
         return $users;
+    }
+    public function isAuthorized($user)
+    {
+        //ユーザー登録は許可
+        if ($this->action === 'add') :
+            return true;
+        endif;
+
+        // 投稿のオーナーは編集や削除ができる
+        if (in_array($this->action, ['edit', 'delete'])) :
+            $page_id = (int) $this->request->params['pass'][0];
+            $this->log($page_id, LOG_DEBUG);
+            $this->log($user['id'], LOG_DEBUG);
+            if ($this->User->isOwnedBy($page_id, $user['id'])) :
+                return true;
+            endif;
+        endif;
+
+        return parent::isAuthorized($user);
     }
 }

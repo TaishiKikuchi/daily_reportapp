@@ -29,12 +29,6 @@ class User extends AppModel
                 'allowEmpty' => false
             )
         ),
-        'trello_id' => array(
-            'required' => array(
-                'rule' => array('isUnique'),
-                'message' => '既に登録されています。'
-            )
-        ),
         'mail' => array(
             'mail_address_rule_2' => array(
                 'rule' => 'isUnique',
@@ -56,5 +50,11 @@ class User extends AppModel
             );
         }
         return true;
+    }
+
+    // 自身のページであるか判別
+    public function isOwnedBy($page_id, $user_id)
+    {
+        return $page_id == $user_id;
     }
 }

@@ -223,32 +223,6 @@ class ReportsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    public function isAuthorized($user)
-    {
-        // 登録済ユーザーは投稿できる
-        if ($this->action === 'add') :
-            return true;
-        endif;
-
-        if ($this->action === 'index') :
-            //$this->autoLayout = false;  // レイアウトをOFFにする
-            return true;
-        endif;
-
-        if ($this->action === 'view') :
-            return true;
-        endif;
-        // 投稿のオーナーは編集や削除ができる
-        if (in_array($this->action, ['edit', 'delete'])) :
-            $reportId = (int) $this->request->params['pass'][0];
-            if ($this->Report->isOwnedBy($reportId, $user['id'])) :
-                return true;
-            endif;
-        endif;
-
-        return parent::isAuthorized($user);
-    }
-
     public function beforeFilter()
     {
         parent::beforeFilter();
