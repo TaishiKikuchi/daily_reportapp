@@ -7,9 +7,13 @@ class User extends AppModel
 {
     public $validate = array(
         'username' => array(
-            'required' => array(
-                'rule' => array('notEmpty','isUnique'),
-                'message' => 'A username is required'
+            'name_rule' => array(
+                'rule' => 'isUnique',
+                'message' => '既に使用されています'
+            ),
+            'name_rule2' => array(
+                'rule' => 'notEmpty',
+                'message' => 'ユーザネームを入力してください'
             )
         ),
         'password' => array(
@@ -25,23 +29,23 @@ class User extends AppModel
                 'allowEmpty' => false
             )
         ),
-        'task' => array(
+        'trello_id' => array(
             'required' => array(
-                'rule' => array('notEmpty','isUnique'),
-                'message' => 'text is required'
+                'rule' => array('isUnique'),
+                'message' => '既に登録されています。'
             )
-        )
+        ),
+        'mail' => array(
+            'mail_address_rule_2' => array(
+                'rule' => 'isUnique',
+                'message' => 'すでに使用されているメールアドレスです'
+            ),
+            'mail_address_rule_1' => array(
+                'rule' => 'email',
+                'message' => 'メールアドレスのフォーマットを確認してください'
+            ),
+        ),
     );
-    /*
-    var $primaryKey = 'departmentcode';
-
-    public $hasOne = array(
-        'Department' => array(
-            'className' => 'Department',
-            'foreignKey' => 'department_id'
-        )
-    );
-    */
 
     public function beforeSave($options = array())
     {

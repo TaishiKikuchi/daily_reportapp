@@ -96,7 +96,6 @@ class ReportsController extends AppController
         $this->set('trello_ex_list', $trello_list);
         $this->set('trello_id', $task['User']['trello_id']);
         $this->set('email', $task['User']['email']);
-
         $this->set('subtitle', 'マイページ');
     }
 

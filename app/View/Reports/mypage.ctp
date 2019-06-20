@@ -1,21 +1,15 @@
 <?php
     echo $this->Html->css('mypage_style');
-    echo $this->element('header');
-    /* trello除外リスト作成途中
-    echo $this->Form->create('exlists');
-    echo $this->Form->input('user_id', [
-        'type' => 'hidden',
-        'value' => $list['Rep']['id']
-    ]);
-    echo $this->Form->button($btname , [
-        'type' => 'submit',
-        'escape' => true,
-        'class' => ['button', 'postbutton']]);
-    echo $this->Form->end(); */
-    ?>
+    echo $this->element('header'); ?>
+
 <button type="button" class="button getbutton" onclick="getCardName('<?= h($trello_id)?>')">Trello読み込み</button>
 <button type="button" class="button getbutton" onclick="getCalendar('<?= h($email) ?>')">カレンダー読み込み</button>
 <button type="button" class="trellosetting" onclick="addSettingWindow()">trello除外設定</button>
+<?= $this->Html->link('ユーザ設定', [
+    'controller' => 'Users',
+    'action' => 'edit',
+    $auth['id']],
+    ['class' => 'button']); ?>
 <div class="container">
     <div class="report_form">
 <?php
