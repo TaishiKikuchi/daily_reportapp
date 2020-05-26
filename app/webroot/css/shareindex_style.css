@@ -1,0 +1,12 @@
+table {
+    margin: auto;
+    margin-top: 20px;
+}
+
+table, td, th {
+    border: 2px rgb(34, 43, 87) solid;
+}
+
+.pager {
+    text-align: center;
+}

@@ -92,7 +92,6 @@ Configure::write('Dispatcher.filters', array(
 	'AssetDispatcher',
 	'CacheDispatcher'
 ));
-
 /**
  * Configures default file logging options
  */
@@ -107,3 +106,6 @@ CakeLog::config('error', array(
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
 ));
+
+require_once('const.php');
+require_once('../vendor/google-api-php-client/vendor/autoload.php');
